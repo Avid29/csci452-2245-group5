@@ -1,0 +1,13 @@
+kernel
+BuildImage
+Offsets
+
+*.o
+*.asm
+*.d
+*.b
+*.map
+*.sym
+*.img
+
+vars.*
