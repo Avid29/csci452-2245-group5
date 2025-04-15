@@ -83,7 +83,7 @@ USERMAIN(progABC); USERMAIN(progDE);  USERMAIN(progFG); USERMAIN(progH);
 USERMAIN(progI);   USERMAIN(progJ);   USERMAIN(progKL); USERMAIN(progMN);
 USERMAIN(progO);   USERMAIN(progP);   USERMAIN(progQ);  USERMAIN(progR);
 USERMAIN(progS);   USERMAIN(progTUV); USERMAIN(progW);  USERMAIN(progX);
-USERMAIN(progY);   USERMAIN(progZ);
+USERMAIN(progY);   USERMAIN(progZ);	  USERMAIN(pong);
 
 /*
 ** User process controls.
