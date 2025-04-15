@@ -17,6 +17,7 @@
 #include <syscalls.h>
 #include <user.h>
 #include <kmem.h>
+#include <vga.h>
 #include <vm.h>
 #include <x86/pic.h>
 
@@ -535,7 +536,14 @@ SYSIMPL(write) {
 		} else if( chan == CHAN_SIO ) {
 
 			sio_write( buf, length );
+		}
+		else if ( chan == CHAN_VGA) {
 
+			if (length != VGA_BUFFER_SIZE) {
+				rval = E_BAD_PARAM;
+			}
+
+			vga_dump(buf);
 		} else {
 
 			rval = E_BAD_CHAN;

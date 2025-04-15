@@ -35,6 +35,7 @@
 
 #define CHAN_CIO            0
 #define CHAN_SIO            1
+#define CHAN_VGA			2
 
 
 // sizes of various things

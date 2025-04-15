@@ -1,6 +1,8 @@
 #ifndef UINIT_INC_C_
 #define UINIT_INC_C_
 #include <common.h>
+#include <string.h>
+#include <vga.h>
 
 /**
 ** Initial process; it starts the other top-level user processes.
@@ -76,6 +78,8 @@ static void process( proc_t *proc )
 	}
 }
 
+char vga_buf[VGA_BUFFER_SIZE];
+
 /*
 ** The initial user process. Should be invoked with zero or one
 ** argument; if provided, the first argument should be the ASCII
@@ -100,6 +104,10 @@ USERMAIN( init ) {
 
 	usprint( buf, "%s: started\n", name );
 	cwrites( buf );
+
+	// test vga
+	memset((void*)vga_buf, 0x0D, VGA_BUFFER_SIZE);
+	write( CHAN_VGA, vga_buf, VGA_BUFFER_SIZE);
 
 	// home up, clear on a TVI 925
 	// swritech( '\x1a' );
