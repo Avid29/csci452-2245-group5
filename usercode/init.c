@@ -24,8 +24,8 @@ static proc_t init_spawn_table[] = {
 	// nothing else available to be dispatched
 	PROCENT( idle, PRIO_DEFERRED, "!", "idle", "." ),
 
-	// the user shell
-	PROCENT( idle, PRIO_STD, "@", "shell" ),
+	// pong
+	PROCENT( pong, PRIO_HIGH, "@", "pong" ),
 
 	// PROCENT( 0, 0, 0, 0 )
 	{ TBLEND }
