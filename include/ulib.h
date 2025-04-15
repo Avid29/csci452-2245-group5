@@ -459,6 +459,15 @@ int32_t kill( uint_t pid );
 int sleep( uint32_t ms );
 
 /**
+** display - display a graphical buffer to vga 
+**
+** usage:   display(n);
+**
+** @param buffer The buffer to copy to vga output memory 
+*/
+void display ( char *buffer );
+
+/**
 ** bogus - a nonexistent system call, to test our syscall ISR
 **
 ** usage:   bogus()
