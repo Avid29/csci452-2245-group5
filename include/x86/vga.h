@@ -7,8 +7,8 @@
 ** Basic definitions for VGA video.
 */
 
-#ifndef VGA_H
-#define	VGA_H
+#ifndef VGA86_H
+#define	VGA86_H
 
 /*
 ** Video parameters
