@@ -58,3 +58,5 @@
 */
 
 #include <usercode/uextras.c>
+
+#include <usercode/ugraphics.c>

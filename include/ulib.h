@@ -577,6 +577,8 @@ int swrite( const char *buf, uint32_t leng );
 */
 void fake_exit( void );
 
+#include <usercode/ugraphics.h>
+
 #endif /* !ASM_SRC */
 
 #endif

@@ -9,8 +9,6 @@
 #include <common.h>
 #include <ulib.h>
 
-#include <graphics.h>
-
 bool_t
 clamp(rect *r) {
     bool_t changed = false;

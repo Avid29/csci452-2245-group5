@@ -2,7 +2,6 @@
 #define UINIT_INC_C_
 
 #include <common.h>
-#include <graphics.h>
 #include <vga.h>
 
 /**
@@ -100,8 +99,8 @@ USERMAIN( init ) {
 	}
 
 	// test the sio
-	write( CHAN_SIO, "$+$\n", 4 );
-	DELAY(SHORT);
+	// write( CHAN_SIO, "$+$\n", 4 );
+	// DELAY(SHORT);
 
 	usprint( buf, "%s: started\n", name );
 	cwrites( buf );
