@@ -1,7 +1,8 @@
 #ifndef UINIT_INC_C_
 #define UINIT_INC_C_
+
 #include <common.h>
-#include <string.h>
+#include <graphics.h>
 #include <vga.h>
 
 /**
@@ -106,7 +107,11 @@ USERMAIN( init ) {
 	cwrites( buf );
 
 	// test vga
-	memset((void*)vga_buf, 0x0D, VGA_BUFFER_SIZE);
+	rect r = {
+		.pos = {.x = 0, .y = 0},
+		.size = {.x = PIXEL_WIDTH, .y = PIXEL_HEIGHT},
+	};
+	draw_rect(vga_buf, r, 0x0D);
 	write( CHAN_VGA, vga_buf, VGA_BUFFER_SIZE);
 
 	// home up, clear on a TVI 925

@@ -36,7 +36,8 @@ USR_C_OBJ = userland.o ulibc.o
 USR_S_SRC = ulibs.S
 USR_S_OBJ = ulibs.o
 
-USR_LIBS  =
+U_LIBS_SRC	= graphics.c
+U_LIBS_OBJ	= graphics.o
 
 USR_SRCS  = $(USR_S_SRC) $(USR_C_SRC)
 USR_OBJS  = $(USR_S_OBJ) $(USR_C_OBJ)
@@ -50,9 +51,9 @@ BOOT_OBJ = boot.o
 
 # Collections of files
 
-OBJECTS = $(OS_OBJS) $(USR_OBJS)
+OBJECTS = $(OS_OBJS) $(USR_OBJS) $(U_LIBS_OBJ)
 
-SOURCES = $(BOOT_SRC) $(OS_SRCS) $(USR_SRCS)
+SOURCES = $(BOOT_SRC) $(OS_SRCS) $(USR_SRCS) $(U_LIBS_SRC)
 
 #####################
 #  OPTIONS SECTION  #
