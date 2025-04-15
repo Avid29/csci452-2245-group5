@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "*.S": "asm-intel-x86-generic",
+        "common.h": "c",
+        "lib.h": "c",
+        "ulib.h": "c",
+        "strings.h": "c",
+        "vga.h": "c",
+        "cio.h": "c",
+        "types.h": "c"
+    }
+}

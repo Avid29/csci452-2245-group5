@@ -115,3 +115,5 @@ typedef struct proc_s {
 #include <usercode/progTUV.c>
 #include <usercode/progW.c>
 #endif
+
+#include <usercode/pong.c>
