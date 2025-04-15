@@ -18,6 +18,7 @@
 #include <user.h>
 #include <kmem.h>
 #include <vm.h>
+#include <vga.h>
 #include <x86/pic.h>
 
 /*
@@ -798,6 +799,18 @@ SYSIMPL(sleep) {
 	}
 }
 
+SYSIMPL(display) {
+	// sanity check
+	assert( pcb != NULL );
+
+	SYSCALL_ENTER( pcb->pid );
+
+	// Get the dump buffer
+	char *buf = (char *) ARG(pcb,1);
+
+	vga_dump(buf);
+}
+
 /*
 ** PRIVATE FUNCTIONS GLOBAL VARIABLES
 */
@@ -824,7 +837,8 @@ static void (* const syscalls[N_SYSCALLS])( pcb_t * ) = {
 	[ SYS_getprio ] = sys_getprio,
 	[ SYS_setprio ] = sys_setprio,
 	[ SYS_kill ]    = sys_kill,
-	[ SYS_sleep ]   = sys_sleep
+	[ SYS_sleep ]   = sys_sleep,
+	[ SYS_display ] = sys_display,
 };
 
 /**

@@ -76,6 +76,8 @@ static void process( proc_t *proc )
 	}
 }
 
+char vga_buffer[0x20000];
+
 /*
 ** The initial user process. Should be invoked with zero or one
 ** argument; if provided, the first argument should be the ASCII
@@ -97,6 +99,10 @@ USERMAIN( init ) {
 	// test the sio
 	write( CHAN_SIO, "$+$\n", 4 );
 	DELAY(SHORT);
+
+	// test the vga
+	umemset(vga_buffer, 0x20000, 0x0D);
+	display( vga_buffer );
 
 	usprint( buf, "%s: started\n", name );
 	cwrites( buf );
