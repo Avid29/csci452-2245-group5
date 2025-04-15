@@ -14,5 +14,5 @@
 #include <vga.h>
 
 void vga_dump( const char *buf) {
-    memcpy((void*)VGA_BASE, buf, VGA_BUFFER_SIZE/2);
+    memcpy((void*)VGA_BASE, buf, VGA_BUFFER_SIZE);
 }

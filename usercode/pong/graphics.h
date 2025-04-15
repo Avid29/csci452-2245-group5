@@ -52,9 +52,9 @@ typedef struct rect_s
 } rect;
 
 void
-draw_rect(void *buf, rect *r, char c);
+draw_rect(void *buf, rect r, char c);
 
 void
-draw_outline(void *buf, rect *r, char c, int thickness);
+draw_outline(void *buf, rect r, char c, int thickness);
 
 #endif /* GRAPHICS_H */
