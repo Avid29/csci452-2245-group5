@@ -1,5 +1,5 @@
 /**
-** @file	graphics.h
+** @file	graphics.c
 **
 ** @author	Adam Dernis
 **
@@ -7,9 +7,8 @@
 */
 
 #include <common.h>
-#include <ulib.h>
 
-#include "graphics.h"
+#include "ugraphics.h"
 
 bool_t
 clamp(rect *r) {

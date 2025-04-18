@@ -1,5 +1,5 @@
 /**
-** @file    extras.c
+** @file    uextras.c
 **
 ** @author  Numerous CSCI-452 classes
 **
@@ -9,7 +9,7 @@
 #ifndef EXTRAS_SRC_INC
 #define EXTRAS_SRC_INC
 
-#include <common.h>
+#include "uextras.h"
 
 /*
 **********************************************
