@@ -2,6 +2,13 @@
     "files.associations": {
         "*.S": "asm-intel-x86-generic",
         "physics.h": "c",
-        "defs.h": "c"
+        "defs.h": "c",
+        "lib.h": "c",
+        "ulib.h": "c",
+        "ugraphics.h": "c",
+        "common.h": "c",
+        "random": "c",
+        "uconvert.h": "c",
+        "uextras.h": "c"
     }
 }

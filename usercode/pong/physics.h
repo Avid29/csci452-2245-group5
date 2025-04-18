@@ -1,7 +1,7 @@
 #include <common.h>
+#include <lib.h>
 
-#include "defs.h" 
-#include "graphics.h"
+#include "defs.h"
 
 pos2d ball_pos;
 int2d_t ball_velocity;

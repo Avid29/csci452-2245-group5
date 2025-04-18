@@ -3,7 +3,6 @@
 
 #include <common.h>
 
-#include "pong/graphics.c"
 #include "pong/physics.c"
 #include "pong/render.c"
 
