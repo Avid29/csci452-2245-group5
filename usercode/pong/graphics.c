@@ -45,7 +45,7 @@ draw_rect(void *buf, rect r, char c) {
     clamp(&r);
 
     for (int i = r.pos.y; i <= r.pos.y + r.size.y; i++) {
-        umemset(buf + i * PIXEL_WIDTH + r.pos.x, c, r.size.x);
+        umemset(buf + i * PIXEL_WIDTH + r.pos.x, r.size.x, c);
     }
 }
 
@@ -54,11 +54,11 @@ draw_outline(void *buf, rect r, char c, int thickness) {
     clamp(&r);
 
     // Hortizontal lines
-    umemset(buf + r.pos.y * PIXEL_WIDTH + r.pos.x, c, r.size.x);
-    umemset(buf + (r.pos.y + r.size.y-1) * PIXEL_WIDTH + r.pos.x, c, r.size.x);
+    umemset(buf + r.pos.y * PIXEL_WIDTH + r.pos.x, r.size.x, c);
+    umemset(buf + (r.pos.y + r.size.y-1) * PIXEL_WIDTH + r.pos.x, r.size.x, c);
 
     // Vertical lines
-    for (int i = r.pos.y; i <= r.pos.y + r.size.y; i++) {
+    for (int i = r.pos.y; i <= (r.pos.y + r.size.y)-1; i++) {
         ((char*)buf)[i * PIXEL_WIDTH + r.pos.x] = c;
         ((char*)buf)[i * PIXEL_WIDTH + r.pos.x + r.size.x] = c;
     }

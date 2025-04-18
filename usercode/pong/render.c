@@ -2,7 +2,7 @@
 #include "physics.h"
 
 char base_buffer[PIXEL_COUNT];
-char graphics_buffer [0x20000];
+char graphics_buffer[PIXEL_COUNT];
 
 void
 draw_base (void ) {
@@ -57,15 +57,15 @@ draw_paddles( void ){
 
 void
 draw_ball( void ){
-    rect pong = {
+    rect ball = {
         .pos = ball_pos,
         .size = {.x = BALL_SIZE, .y = BALL_SIZE}
     };
 
-    pong.pos.x += BOARD_OFFSET_X;
-    pong.pos.y += BOARD_OFFSET_Y;
+    ball.pos.x += BOARD_OFFSET_X;
+    ball.pos.y += BOARD_OFFSET_Y;
 
-    draw_rect(graphics_buffer, pong, BALL_COLOR);
+    draw_rect(graphics_buffer, ball, BALL_COLOR);
 }
 
 void
@@ -78,5 +78,6 @@ update_display( void ) {
     draw_ball();
 
     // Dump results
-	display(graphics_buffer);
+
+    display(graphics_buffer);
 }
