@@ -111,6 +111,7 @@ USERMAIN(progY);   USERMAIN(progZ); USERMAIN(pong);
 ** from other processes and are never spawned directly.
 */
 
+/*
 #define SPAWN_A
 #define SPAWN_B
 #define SPAWN_C
@@ -132,6 +133,7 @@ USERMAIN(progY);   USERMAIN(progZ); USERMAIN(pong);
 #define SPAWN_T
 #define SPAWN_U
 #define SPAWN_V
+*/
 
 #define SPAWN_PONG
 
