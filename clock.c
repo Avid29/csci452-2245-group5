@@ -71,13 +71,15 @@ static void clk_isr( int vector, int code ) {
 	// reporting frequency, in seconds.
 
 	if( (system_time % SEC_TO_TICKS(SYSTEM_STATUS)) == 0 ) {
-		cio_printf_at( 1, 0, " queues: R[%u] W[%u] S[%u] Z[%u] I[%u]   ",
+		unsigned int xy = cio_where();
+		cio_printf_at( 7, 0, " queues: R[%u] W[%u] Sl[%u] Z[%u] Si[%u]   ",
 			pcb_queue_length(ready),
 			pcb_queue_length(waiting),
 			pcb_queue_length(sleeping),
 			pcb_queue_length(zombie),
 			pcb_queue_length(sioread)
 		);
+		cio_moveto( (xy >> 16) & 0xffff, xy & 0xffff );
 	}
 #endif
 
@@ -110,6 +112,7 @@ static void clk_isr( int vector, int code ) {
 
 		// OK, we need to wake this process up
 		assert( pcb_queue_remove(sleeping,&tmp) == SUCCESS );
+		tmp->next = NULL;
 		schedule( tmp );
 	} while( 1 );
 

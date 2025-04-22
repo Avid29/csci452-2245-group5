@@ -1,6 +1,4 @@
 /**
-** SCCS ID:	@(#)cio.h	2.7	1/22/25
-**
 ** @file	cio.h
 **
 ** @author	Warren R. Carithers
@@ -59,6 +57,13 @@
 
 #ifndef ASM_SRC
 
+#ifdef CIO_DUP2_SIO
+// duplicate all non-scrolling-region console output to SIO -- will
+// be set by the SIO module when it's initialized
+extern unsigned char dupcio;
+
+#endif
+
 // EOT indicator (control-D)
 #define EOT '\04'
 
@@ -115,6 +120,17 @@ void cio_setscroll( unsigned int min_x, unsigned int min_y,
 ** @param x,y   desired coordinate position
 */
 void cio_moveto( unsigned int x, unsigned int y );
+
+/**
+** cio_where
+**
+** Returns the current cursor position as a 32-bit unsigned
+** integer. The upper 16 bits are the 'x' position, and the
+** lower 16 bits are the 'y' position.
+**
+** @return the current cursor position
+*/
+unsigned int cio_where( void );
 
 /**
 ** cio_putchar

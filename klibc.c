@@ -269,7 +269,7 @@ void put_char_or_code( int ch ) {
 ** Perform a stack backtrace
 **
 ** @param ebp   Initial EBP to use
-** @param args  Number of function argument values to print
+** @param args  Number of argument values to print from each frame
 */
 void backtrace( uint32_t *ebp, uint_t args ) {
 
@@ -281,7 +281,12 @@ void backtrace( uint32_t *ebp, uint_t args ) {
 		cio_putchar( '\n' );
 	}
 
-	while( ebp != NULL ){
+#ifdef BTR_LIMIT
+	for( int j = 0; ebp != NULL && j < BTR_LIMIT; ++j )
+#else
+	while( ebp != NULL )
+#endif
+	{
 
 		// get return address and report it and EBP
 		uint32_t ret = ebp[1];
@@ -317,7 +322,7 @@ void kpanic( const char *msg ) {
 		cio_printf( "%s\n", msg );
 	}
 
-	delay( DELAY_5_SEC );   // approximately
+	delay( DELAY_2_SEC );   // approximately
 
 	// dump a bunch of potentially useful information
 
@@ -326,6 +331,8 @@ void kpanic( const char *msg ) {
 
 	// dump the basic info about what's in the process table
 	ptable_dump_counts();
+
+	delay( DELAY_2_SEC );
 
 	// dump information about the queues
 	pcb_queue_dump( "R", ready, true );
@@ -338,6 +345,8 @@ void kpanic( const char *msg ) {
 	backtrace( (uint32_t *) r_ebp(), 3 );
 
 	// could dump other stuff here, too
+
+	delay( DELAY_5_SEC );   // approximately
 
 	panic( "KERNEL PANIC" );
 }

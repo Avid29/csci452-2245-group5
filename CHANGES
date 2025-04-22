@@ -1,0 +1,22 @@
+2025/04/25 3:05pm
+
+Cumulative changes between 20245/ and 20245.v2/:
+
+QRUN                    - more option suggestions in the comment
+clock.c                 - minor change to queue list format for clarity
+isrs.S                  - minor changes to comments
+kernel.c                - expanded stats() command list
+procs.c                 - enhanced pcb_dump() and ptable_dump() functionality
+sio.c                   - comments, mods to sio_read() and sio_dump()
+syscalls.c              - fixed error in sys_read() - wasn't blocking procs
+
+include/debug.h         - better IDT_PRINT and GDT_PRINT, tracing options
+include/procs.h         - corresponds to changes in procs.c
+include/sio.h           - corresponds to changes in sio.c
+
+include/x86/desc.h      - NEW FILE, better information about IDT and GDT
+                          descriptors
+
+usercode/init.c         - fixed bug preventing shell from being started
+usercode/shell.c        - added readline() function to get entire input
+                          line from SIO, fixed bug in usage()

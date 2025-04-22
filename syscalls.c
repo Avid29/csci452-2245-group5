@@ -57,10 +57,6 @@ int mbz;
 	cio_printf( "<-- %s %08x\n", __func__, (uint32_t) (x) ); }
 
 /*
-** PRIVATE DATA TYPES
-*/
-
-/*
 ** PUBLIC GLOBAL VARIABLES
 */
 
@@ -470,32 +466,48 @@ SYSIMPL(read) {
 	if( chan == CHAN_CIO ) {
 
 		// console input is non-blocking
-		if( cio_input_queue() < 1 ) {
-			RET(pcb) = 0;
-			SYSCALL_EXIT( 0 );
-			return;
+		if( cio_input_queue() > 1 ) {
+			// at least one character
+			n = cio_gets( buf, len );
 		}
-		// at least one character
-		n = cio_gets( buf, len );
 		RET(pcb) = n;
 		SYSCALL_EXIT( n );
 		return;
 
-	} else if( chan == CHAN_SIO ) {
+	} else if( chan != CHAN_SIO ) {
 
-		// SIO input is blocking, so if there are no characters
-		// available, we'll block this process
-		n = sio_read( buf, len );
-		RET(pcb) = n;
-		SYSCALL_EXIT( n );
+		// bad channel code
+		RET(pcb) = E_BAD_PARAM;
+		SYSCALL_EXIT( E_BAD_PARAM );
 		return;
 
 	}
 
-	// bad channel code
-	RET(pcb) = E_BAD_PARAM;
-	SYSCALL_EXIT( E_BAD_PARAM );
-	return;
+	// must be SIO.
+
+	// SIO input is blocking, so if there are no characters
+	// available, we'll block this process
+
+	if( sio_inq_length() < 1 ) {
+
+		// no characters, so block this process
+		pcb->state = STATE_BLOCKED;
+		assert1( pcb_queue_insert(sioread,pcb) == SUCCESS );
+
+		// select the next process to run
+		current = NULL;
+		dispatch();
+
+		SYSCALL_EXIT( 0 );
+
+		return;
+	}
+
+	// at least one character, so we'll return whatever is there
+	n = sio_read( buf, len );
+
+	RET(pcb) = n;
+	SYSCALL_EXIT( n );
 }
 
 /**
@@ -728,6 +740,7 @@ SYSIMPL(kill) {
 		// to dispatch a new process
 		victim->exit_status = EXIT_KILLED;
 		status = pcb_queue_remove_this( waiting, victim );
+		victim->next = NULL;
 		pcb_zombify( victim );
 		RET(pcb) = status;
 		break;
@@ -738,7 +751,7 @@ SYSIMPL(kill) {
 		// catch that earlier.
 		sprint( b256, "*** kill(): victim %d, odd state %d\n",
 				victim->pid, victim->state );
-		PANIC( 0, b256 );
+		kpanic( b256 );
 	}
 
 	SYSCALL_EXIT( status );
@@ -836,6 +849,10 @@ static void (* const syscalls[N_SYSCALLS])( pcb_t * ) = {
 ** @param code     Error code (0 for this interrupt)
 */
 static void sys_isr( int vector, int code ) {
+#ifdef SYSCALL_DOTS
+	// position cycles 6, 2, 3, 4, 5, 6, 2, ...
+	static int pos = 6;
+#endif
 
 	// keep the compiler happy
 	(void) vector;
@@ -844,6 +861,20 @@ static void sys_isr( int vector, int code ) {
 	// sanity check!
 	assert( current != NULL );
 	assert( current->context != NULL );
+
+#ifdef SYSCALL_DOTS
+	// "wrapping" dot progression from positions 2-6 on line 0
+	// remember where the cursor was
+	unsigned int xy = cio_where();
+	// erase the current dot
+	cio_putchar_at( pos, 0, ' ' );
+	++pos;
+	if( pos > 6 ) {
+		pos = 2;
+	}
+	cio_putchar_at( pos, 0, '*' );
+	cio_moveto( (xy >> 16) & 0xff, xy & 0xff );
+#endif
 
 	// retrieve the syscall code
 	int num = REG( current, eax );
