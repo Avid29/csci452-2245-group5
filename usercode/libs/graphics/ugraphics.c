@@ -11,7 +11,7 @@
 #include "ugraphics.h"
 
 bool_t
-clamp(rect *r) {
+clamp(rect_t *r) {
     bool_t changed = false;
 
     if (r->pos.x < 0) {
@@ -38,7 +38,7 @@ clamp(rect *r) {
 }
 
 void
-draw_rect(void *buf, rect r, char c) {
+draw_rect(void *buf, rect_t r, char c) {
 
     // Clamp the rectangle to fit the pixel space
     clamp(&r);
@@ -49,7 +49,7 @@ draw_rect(void *buf, rect r, char c) {
 }
 
 void
-draw_outline(void *buf, rect r, char c, int thickness) {
+draw_outline(void *buf, rect_t r, char c, int thickness) {
     clamp(&r);
 
     // Hortizontal lines
@@ -65,7 +65,7 @@ draw_outline(void *buf, rect r, char c, int thickness) {
     if (thickness == 1)
         return;
 
-    rect child = r;
+    rect_t child = r;
     child.pos.x++;
     child.pos.y++;
     child.size.x-=2;

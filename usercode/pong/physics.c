@@ -9,16 +9,16 @@ update_physics(int deltaT) {
         ball_pos.y += ball_velocity.y;
     
         // Detect collision with top/bottom walls
-        if (ball_pos.y < BOARD_THICKNESS || ball_pos.y > BOARD_HEIGHT-BALL_SIZE-BOARD_THICKNESS){
+        if ( ball_pos.y < 0 || ball_pos.y > PHYSICS_BOUNDS_Y-BALL_SIZE ){
             ball_velocity.y *= -1;
             ball_pos.y += ball_velocity.y;
         }
 
         // TODO: Paddle collision
-        
+       
         // Detect collision with side walls
         // TODO: Score
-        if (ball_pos.x < BOARD_THICKNESS || ball_pos.x > BOARD_WIDTH-BALL_SIZE-BOARD_THICKNESS ){
+        if ( ball_pos.x < 0 || ball_pos.x > PHYSICS_BOUNDS_X-BALL_SIZE ){
             ball_velocity.x *= -1;
             ball_pos.x += ball_velocity.x;
         }

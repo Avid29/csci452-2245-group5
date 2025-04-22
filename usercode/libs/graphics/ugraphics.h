@@ -36,25 +36,31 @@
 #define VGA_PALLETE_PURE_RED    0x28
 #define VGA_PALLETE_PURE_GREEN  0x2F
 
+typedef struct vec2d_s
+{
+    float x;
+    float y;
+} vec2d_t;
+
 typedef struct int2d_s
 {
     short x;
     short y;
 } int2d_t;
 
-typedef int2d_t pos2d;
-typedef int2d_t size2d;
+typedef int2d_t pos2d_t;
+typedef int2d_t size2d_t;
 
 typedef struct rect_s
 {
-    pos2d pos;
-    size2d size;
-} rect;
+    pos2d_t pos;
+    size2d_t size;
+} rect_t;
 
 void
-draw_rect(void *buf, rect r, char c);
+draw_rect(void *buf, rect_t r, char c);
 
 void
-draw_outline(void *buf, rect r, char c, int thickness);
+draw_outline(void *buf, rect_t r, char c, int thickness);
 
 #endif /* GRAPHICS_H */
