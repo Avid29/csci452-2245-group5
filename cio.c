@@ -391,6 +391,8 @@ static void do_printf( int x, int y, char **f ) {
 
 	ap = (int *)( f + 1 );
 
+	assert(fmt != NULL);
+
 	while( (ch = *fmt++) != '\0' ) {
 
 		/*

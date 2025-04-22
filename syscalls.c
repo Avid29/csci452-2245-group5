@@ -15,6 +15,7 @@
 #include <procs.h>
 #include <sio.h>
 #include <syscalls.h>
+#include <beeper.h>
 #include <user.h>
 #include <kmem.h>
 #include <vm.h>
@@ -536,6 +537,7 @@ SYSIMPL(write) {
 
 	// assume we write the indicated amount
 	int rval = length;
+	int err = 0;
 
 	// simplest case
 	if( length >= 0 ) {
@@ -547,6 +549,13 @@ SYSIMPL(write) {
 		} else if( chan == CHAN_SIO ) {
 
 			sio_write( buf, length );
+
+		/* } else if( chan == CHAN_BEEP) { */
+
+		/* 	err = beeper_write( buf, length ); */
+		/* 	if( err < 0 ) { */
+		/* 		rval = err; */
+		/* 	} */
 
 		} else {
 
