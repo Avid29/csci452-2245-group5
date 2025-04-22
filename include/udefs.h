@@ -85,6 +85,8 @@ USERMAIN(progO);   USERMAIN(progP);   USERMAIN(progQ);  USERMAIN(progR);
 USERMAIN(progS);   USERMAIN(progTUV); USERMAIN(progW);  USERMAIN(progX);
 USERMAIN(progY);   USERMAIN(progZ);
 
+USERMAIN(progBEEP);
+
 #endif /* !ASM_SRC */
 
 /*
@@ -113,6 +115,7 @@ USERMAIN(progY);   USERMAIN(progZ);
 ** from other processes and are never spawned directly.
 */
 
+#define SPAWN_BEEP
 /* #define SPAWN_A */
 /* #define SPAWN_B */
 /* #define SPAWN_C */

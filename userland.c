@@ -58,6 +58,10 @@ typedef struct proc_s {
 ** file shouldn't cause problems.
 */
 
+#if defined(SPAWN_BEEP)
+#include <usercode/progBEEP.c>
+#endif
+
 #if defined(SPAWN_A) || defined(SPAWN_B) || defined(SPAWN_C)
 #include <usercode/progABC.c>
 #endif

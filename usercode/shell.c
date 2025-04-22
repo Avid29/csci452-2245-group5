@@ -27,6 +27,10 @@ static int children = 0;
 */
 static proc_t sh_spawn_table[] = {
 
+#if defined(SPAWN_BEEP)
+	PROCENT( progBEEP, PRIO_STD, ",", "userBEEP", ",", ":)" ),
+#endif
+
 	// Users A-C each run ProgABC, which loops printing its character
 #if defined(SPAWN_A)
 	PROCENT( progABC, PRIO_STD, "A", "userA", "A", "30" ),
