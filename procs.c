@@ -342,7 +342,7 @@ void pcb_queue_check( pcb_queue_t queue ) {
 
 	// check for NULL pointers
 	if( queue == NULL ) {
-		kpanic( "QCHECK: NULL parameter" ):
+		kpanic( "QCHECK: NULL parameter" );
 	} else if( queue->head == NULL ) {
 		if( queue->tail != NULL ) {
 			sprint( b256, "QCHK: q %08x head %08x tail %08x len %u",
