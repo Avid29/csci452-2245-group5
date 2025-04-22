@@ -1,9 +1,12 @@
+boot.s
+LOG
 kernel
 BuildImage
 Offsets
 
 *.o
 *.asm
+*.lst
 *.d
 *.b
 *.map
