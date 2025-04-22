@@ -152,7 +152,7 @@ CPPFLAGS = $(USER_OPTIONS) -nostdinc $(INCLUDES)
 # Compiler/assembler/etc. settings for 32-bit binaries
 #
 CC = gcc
-CFLAGS = -m32 -ggdb -fno-pic -fno-pie -std=c99 -fno-stack-protector -fno-builtin -Wall -Wstrict-prototypes -MD $(CPPFLAGS)
+CFLAGS = -m32 -mfpmath=387 -ggdb -fno-pic -fno-pie -std=c99 -fno-stack-protector -fno-builtin -Wall -Wstrict-prototypes -MD $(CPPFLAGS)
 # uncomment this if you want optimization
 # CFLAGS += -O2
 

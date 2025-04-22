@@ -6,7 +6,7 @@
 #define BOARD_OFFSET_X          10
 #define BOARD_OFFSET_Y          25
 
-#define BOARD_WIDTH             PIXEL_WIDTH - (BOARD_OFFSET_X * 2)
+#define BOARD_WIDTH             (PIXEL_WIDTH - (BOARD_OFFSET_X * 2))
 #define BOARD_HEIGHT            165
 
 #define BOARD_THICKNESS         4
@@ -22,7 +22,10 @@
 #define RIGHT_PADDLE_COLOR      VGA_PALLETE_PURE_RED
 
 #define PADDLE_OFFSET_X         5
-#define PADDLE_LENGTH           33
-#define PADDLE_WIDTH            4
+#define PADDLE_LENGTH           40
+#define PADDLE_WIDTH            6
+
+#define PHYSICS_BOUNDS_X	(BOARD_WIDTH-(BOARD_THICKNESS*2))
+#define PHYSICS_BOUNDS_Y	(BOARD_HEIGHT-(BOARD_THICKNESS*2))
 
 #endif

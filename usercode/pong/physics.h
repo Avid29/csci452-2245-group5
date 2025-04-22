@@ -3,8 +3,8 @@
 
 #include "defs.h"
 
-pos2d ball_pos;
-int2d_t ball_velocity;
+vec2d_t ball_pos;
+vec2d_t ball_velocity;
 
 int left_paddle_pos;
 int right_paddle_pos;
