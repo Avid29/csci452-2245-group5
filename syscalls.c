@@ -550,12 +550,12 @@ SYSIMPL(write) {
 
 			sio_write( buf, length );
 
-		/* } else if( chan == CHAN_BEEP) { */
+		} else if( chan == CHAN_BEEP) {
 
-		/* 	err = beeper_write( buf, length ); */
-		/* 	if( err < 0 ) { */
-		/* 		rval = err; */
-		/* 	} */
+			err = beeper_write( buf, length );
+			if( err < 0 ) {
+				rval = err;
+			}
 
 		} else {
 

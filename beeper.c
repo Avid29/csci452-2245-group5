@@ -28,6 +28,7 @@ int beeper_write(char *buf, uint_t length)
 		// Delay until next sample
 		// 44100 Hz audio... 22 microseconds
 		// TODO
+		//delay(1);
 	}
 
 	/* Unset speaker clock gate */

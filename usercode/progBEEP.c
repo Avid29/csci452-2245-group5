@@ -13,8 +13,13 @@
 
 USERMAIN( progBEEP ) {
 	char *name = argv[0] ? argv[0] : "nobody";
+	char buf[128];
 
-	write(CHAN_BEEP, chom_raw, chom_raw_len);
+	cwrites("I'm beepin!\n");
+
+	int ret = write(CHAN_BEEP, chom_raw, chom_raw_len);
+	usprint(buf, " Returned from a beep write... Got %d\n", ret);
+	cwrites(buf);
 
 	// all done!
 	exit( 0 );
