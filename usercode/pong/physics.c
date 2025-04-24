@@ -1,8 +1,5 @@
 #include "physics.h"
 
-#define X_AXIS 0
-#define Y_AXIS 1
-
 #define repeat2(x) x x
 #define repeat3(x) x x x
 #define repeat4(x) repeat2(repeat2(x))
@@ -18,25 +15,44 @@
 #define repeat2048(x) repeat2(repeat1024(x))
 #define repeat4096(x) repeat2(repeat2048(x))
 
+const vec2d_t unit_x = { .x = 1, .y = 0};
+const vec2d_t unit_y = { .x = 0, .y = 1};
+
 void
-bounce( char axis ) {
-	if (axis > 1) {
-		axis = Y_AXIS;
-	}
+bounce( vec2d_t axis ) {
 
 	// TODO: Stop cheating on the bounce physics
-    // NOTE: Take a normal vector instead of an axis,
-    // and calculate the actual new position instead of
+    // NOTE: Calculate the actual new position instead of
     // negating movement along the bounce axis.   
 
-	// Bounce on the axis
-	((float*) &ball_velocity)[(unsigned char)axis] *= -1;
-	((float*) &ball_pos)[(unsigned char)axis] += ((float*) &ball_velocity)[(unsigned char)axis];
+	// Reflect along the axis
+    ball_velocity = reflect(ball_velocity, axis);
+
+    // Update position
+	ball_pos.x += ball_velocity.x;
+	ball_pos.y += ball_velocity.y;
 }
 
 bool_t
 in_range(float value, float low, float high) {
     return value > low && value < high;
+}
+
+float
+dot(vec2d_t v1, vec2d_t v2) {
+    return (v1.x * v2.x) + (v1.y * v2.y);
+}
+
+vec2d_t
+reflect(vec2d_t vector, vec2d_t normal) {
+    float cof = dot(vector, normal) * 2;
+    normal.x *= cof;
+    normal.y *= cof;
+
+    vec2d_t ret;
+    ret.x = vector.x - normal.x;
+    ret.y = vector.y - normal.y;
+    return ret;
 }
 
 void
@@ -51,32 +67,41 @@ update_physics(int deltaT) {
         if (in_range(ball_pos.x, LEFT_PADDLE_X_LOW-BALL_SIZE, LEFT_PADDLE_X_HIGH)
             && in_range(ball_pos.y, left_paddle_pos-BALL_SIZE, left_paddle_pos + PADDLE_LENGTH ))
         {
-            bounce(X_AXIS);
+            bounce(unit_x);
         }
 
         // Check for right paddle collision
         if (in_range(ball_pos.x, RIGHT_PADDLE_X_LOW-BALL_SIZE, RIGHT_PADDLE_X_HIGH)
             && in_range(ball_pos.y, right_paddle_pos-BALL_SIZE, right_paddle_pos + PADDLE_LENGTH ))
         {
-            bounce(X_AXIS);
+            bounce(unit_x);
         }
         
-        repeat2048(__asm__ __volatile__ ("nop");)
-        repeat1024(__asm__ __volatile__ ("nop");)
-        // repeat512(__asm__ __volatile__ ("nop");)
-
-
         // Detect collision with top/bottom walls
         if ( !in_range(ball_pos.y, 0, PHYSICS_BOUNDS_Y-BALL_SIZE) ) {
-           bounce(Y_AXIS);
+           bounce(unit_y);
            return;
         }
 
         // Detect collision with side walls
         // TODO: Score
         if ( !in_range(ball_pos.x, 0, PHYSICS_BOUNDS_X-BALL_SIZE) ){
-            bounce(X_AXIS);
+            bounce(unit_x);
             return;
         }
+
+
+        // DO NOT REMOVE. I DON'T KNOW WHY BUT THIS IS NECCESARY!!!
+        // NOTE: As you add code, you may need to either increase or
+        //decrease the number of nops
+        // goto nop_jump;
+
+        repeat2048(__asm__ __volatile__ ("nop");)
+        // repeat1024(__asm__ __volatile__ ("nop");)
+        repeat512(__asm__ __volatile__ ("nop");)
+        // repeat128(__asm__ __volatile__ ("nop");)
+        
+        // nop_jump:
+        return;
     }
 }
