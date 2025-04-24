@@ -19,8 +19,8 @@ USERMAIN(pong)
     ball_pos.y = 50;
 
     // Init velocity
-    ball_velocity.x = .05;
-    ball_velocity.y = .05;
+    ball_velocity.x = .2;
+    ball_velocity.y = .2;
 
     int time = gettime();
 
