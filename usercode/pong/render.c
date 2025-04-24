@@ -46,12 +46,12 @@ draw_paddles( void ){
 
     // left paddle
     paddle.pos.x = BOARD_OFFSET_X + BOARD_THICKNESS + PADDLE_OFFSET_X;
-    paddle.pos.y = BOARD_OFFSET_Y + left_paddle_pos;
+    paddle.pos.y = BOARD_OFFSET_Y + BOARD_THICKNESS + left_paddle_pos;
     draw_rect(graphics_buffer, paddle, LEFT_PADDLE_COLOR);
 
     // right paddle
-    paddle.pos.x = PIXEL_WIDTH - paddle.pos.x - PADDLE_WIDTH;
-    paddle.pos.y = BOARD_OFFSET_Y + right_paddle_pos;
+    paddle.pos.x = BOARD_OFFSET_X + BOARD_WIDTH - PADDLE_WIDTH - PADDLE_OFFSET_X - BOARD_THICKNESS;
+    paddle.pos.y = BOARD_OFFSET_Y + BOARD_THICKNESS + right_paddle_pos;
     draw_rect(graphics_buffer, paddle, RIGHT_PADDLE_COLOR);
 }
 

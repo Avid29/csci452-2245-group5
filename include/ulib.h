@@ -43,6 +43,15 @@
 */
 
 #include <usercode/libs/stdlib/uconvert.h>
+#include <usercode/libs/stdlib/ustrings.h>
+
+/*
+**********************************************
+** MATH FUNCTIONS
+**********************************************
+*/
+
+#include <usercode/libs/stdlib/umath.h>
 
 /*
 *************************************************

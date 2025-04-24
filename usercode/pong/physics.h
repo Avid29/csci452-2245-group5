@@ -9,5 +9,9 @@ vec2d_t ball_velocity;
 float left_paddle_pos;
 float right_paddle_pos;
 
+float dot(vec2d_t v1, vec2d_t v2);
+
+vec2d_t reflect(vec2d_t vector, vec2d_t normal);
+
 void
 update_physics( int deltaT );
