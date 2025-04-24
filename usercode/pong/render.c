@@ -5,7 +5,7 @@ char base_buffer[PIXEL_COUNT];
 char graphics_buffer[PIXEL_COUNT];
 
 void
-draw_base (void ) {
+draw_base ( void ) {
     // Clear background
     rect_t r_bck = {
         .pos = { .x = 0, .y = 0 },
@@ -56,14 +56,9 @@ draw_paddles( void ){
 }
 
 void
-draw_ball( void ){
-
-    pos2d_t p = {
-        .x = (short)ball_pos.x,
-        .y = (short)ball_pos.y };
-
+draw_ball( void ) {
     rect_t ball = {
-        .pos = p,
+        .pos = {.x = (short)ball_pos.x, (short)ball_pos.y },
         .size = {.x = BALL_SIZE, .y = BALL_SIZE}
     };
 
