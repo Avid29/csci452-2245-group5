@@ -1,20 +1,5 @@
 #include "physics.h"
 
-#define repeat2(x) x x
-#define repeat3(x) x x x
-#define repeat4(x) repeat2(repeat2(x))
-#define repeat5(x) repeat2(repeat2(x)) x
-#define repeat8(x) repeat2(repeat4(x))
-#define repeat16(x) repeat2(repeat8(x))
-#define repeat32(x) repeat2(repeat16(x))
-#define repeat64(x) repeat2(repeat32(x))
-#define repeat128(x) repeat2(repeat64(x))
-#define repeat256(x) repeat2(repeat128(x))
-#define repeat512(x) repeat2(repeat256(x))
-#define repeat1024(x) repeat2(repeat512(x))
-#define repeat2048(x) repeat2(repeat1024(x))
-#define repeat4096(x) repeat2(repeat2048(x))
-
 const vec2d_t unit_x = { .x = 1, .y = 0};
 const vec2d_t unit_y = { .x = 0, .y = 1};
 const vec2d_t unit_NaN = { .x = NaN, .y = NaN};
@@ -120,19 +105,6 @@ update_physics(int deltaT) {
             bounce(unit_x, unit_NaN);
             return;
         }
-
-
-        // DO NOT REMOVE. I DON'T KNOW WHY BUT THIS IS NECCESARY!!!
-        // NOTE: As you add code, you may need to either increase or
-        //decrease the number of nops
-        // goto nop_jump;
-
-        // repeat2048(__asm__ __volatile__ ("nop");)
-        repeat1024(__asm__ __volatile__ ("nop");)
-        // repeat512(__asm__ __volatile__ ("nop");)
-        repeat256(__asm__ __volatile__ ("nop");)
-        
-        // nop_jump:
         return;
     }
 }
