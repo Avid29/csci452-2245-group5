@@ -78,6 +78,5 @@ update_display( void ) {
     draw_ball();
 
     // Dump results
-
     display(graphics_buffer);
 }

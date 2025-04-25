@@ -17,20 +17,35 @@
 
 const vec2d_t unit_x = { .x = 1, .y = 0};
 const vec2d_t unit_y = { .x = 0, .y = 1};
+const vec2d_t unit_NaN = { .x = NaN, .y = NaN};
 
 void
-bounce( vec2d_t axis ) {
+bounce( vec2d_t axis, vec2d_t boundary ) {
+    // Normalize axis of reflection
+    axis = normalize(axis);
 
-	// TODO: Stop cheating on the bounce physics
-    // NOTE: Calculate the actual new position instead of
-    // negating movement along the bounce axis.   
+    // Calculate overstep past boundary
+    float overstep = 1;
+    if (!is_nan(boundary.x)) {
+        float overlap = boundary.x - ball_pos.x;
+        overstep = overlap / ball_velocity.x;
+    }
+    if (!is_nan(boundary.y)) {
+        float overlap = boundary.y - ball_pos.y;
+        overstep = max(overstep, overlap / ball_velocity.y);
+    }
 
-	// Reflect along the axis
+    // Jump back to boundary
+	ball_pos.x -= ball_velocity.x * overstep;
+	ball_pos.y -= ball_velocity.y * overstep;
+
+	// Reflect velocity along the axis
     ball_velocity = reflect(ball_velocity, axis);
 
-    // Update position
-	ball_pos.x += ball_velocity.x;
-	ball_pos.y += ball_velocity.y;
+    // Calculate remaining ball movement
+    float progress = 1 - overstep;
+	ball_pos.x += ball_velocity.x * progress;
+	ball_pos.y += ball_velocity.y * progress;
 }
 
 bool_t
@@ -55,6 +70,14 @@ reflect(vec2d_t vector, vec2d_t normal) {
     return ret;
 }
 
+vec2d_t
+normalize(vec2d_t vector) {
+    float len = sqrt(dot(vector, vector));
+    vector.x /= len;
+    vector.y /= len;
+    return vector;
+}
+
 void
 update_physics(int deltaT) {
     for (int i = 0; i < deltaT; i++)
@@ -62,31 +85,39 @@ update_physics(int deltaT) {
         // Apply velocity
         ball_pos.x += ball_velocity.x;
         ball_pos.y += ball_velocity.y;
-      
+
         // Check for left paddle collision
         if (in_range(ball_pos.x, LEFT_PADDLE_X_LOW-BALL_SIZE, LEFT_PADDLE_X_HIGH)
             && in_range(ball_pos.y, left_paddle_pos-BALL_SIZE, left_paddle_pos + PADDLE_LENGTH ))
         {
-            bounce(unit_x);
+            vec2d_t normal = {.x = 1};
+            normal.y = map_range(ball_pos.y, left_paddle_pos, left_paddle_pos + PADDLE_LENGTH, 0.1, -0.1);
+            
+            vec2d_t boundary = {.x = LEFT_PADDLE_X_HIGH, .y = NaN};
+            bounce(normal, boundary);
         }
 
         // Check for right paddle collision
         if (in_range(ball_pos.x, RIGHT_PADDLE_X_LOW-BALL_SIZE, RIGHT_PADDLE_X_HIGH)
             && in_range(ball_pos.y, right_paddle_pos-BALL_SIZE, right_paddle_pos + PADDLE_LENGTH ))
         {
-            bounce(unit_x);
+            vec2d_t normal = {.x = -1};
+            normal.y = map_range(ball_pos.y, right_paddle_pos, right_paddle_pos + PADDLE_LENGTH, 0.1, -0.1);
+
+            vec2d_t boundary = {.x = RIGHT_PADDLE_X_LOW-BALL_SIZE, .y = NaN};
+            bounce(normal, boundary);
         }
         
         // Detect collision with top/bottom walls
         if ( !in_range(ball_pos.y, 0, PHYSICS_BOUNDS_Y-BALL_SIZE) ) {
-           bounce(unit_y);
-           return;
+            bounce(unit_y, unit_NaN);
+            return;
         }
 
         // Detect collision with side walls
         // TODO: Score
         if ( !in_range(ball_pos.x, 0, PHYSICS_BOUNDS_X-BALL_SIZE) ){
-            bounce(unit_x);
+            bounce(unit_x, unit_NaN);
             return;
         }
 
@@ -96,10 +127,10 @@ update_physics(int deltaT) {
         //decrease the number of nops
         // goto nop_jump;
 
-        repeat2048(__asm__ __volatile__ ("nop");)
-        // repeat1024(__asm__ __volatile__ ("nop");)
-        repeat512(__asm__ __volatile__ ("nop");)
-        // repeat128(__asm__ __volatile__ ("nop");)
+        // repeat2048(__asm__ __volatile__ ("nop");)
+        repeat1024(__asm__ __volatile__ ("nop");)
+        // repeat512(__asm__ __volatile__ ("nop");)
+        repeat256(__asm__ __volatile__ ("nop");)
         
         // nop_jump:
         return;
