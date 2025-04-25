@@ -4,7 +4,7 @@
 #include "defs.h"
 
 vec2d_t ball_pos;
-vec2d_t ball_velocity;
+vec2d_t ball_vel;
 
 float left_paddle_pos;
 float right_paddle_pos;

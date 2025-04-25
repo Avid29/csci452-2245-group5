@@ -33,16 +33,16 @@ USERMAIN(pong)
     left_paddle_pos = 25;
     right_paddle_pos = 55;
 
-    left_vel = .1;
-    right_vel = -.15;
+    left_vel = .3;
+    right_vel = -.5;
 
     // Spawn ball
     ball_pos.x = 50;
     ball_pos.y = 50;
 
     // Init velocity
-    ball_velocity.x = .2;
-    ball_velocity.y = .2;
+    ball_vel.x = .5;
+    ball_vel.y = .3;
 
     int time = gettime();
 
