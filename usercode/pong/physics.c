@@ -4,10 +4,17 @@ const vec2d_t unit_x = { .x = 1, .y = 0};
 const vec2d_t unit_y = { .x = 0, .y = 1};
 const vec2d_t unit_NaN = { .x = NaN, .y = NaN};
 
+// NOTE: Physics is currently broken when the pong hits the ball from the side 
+
 int deltaT;
+bool_t mid_bounce;
 
 void
 bounce( vec2d_t axis, vec2d_t boundary ) {
+    
+    if (mid_bounce)
+        return;
+
     // Normalize axis of reflection
     axis = normalize(axis);
 
@@ -19,7 +26,7 @@ bounce( vec2d_t axis, vec2d_t boundary ) {
     }
     if (!is_nan(boundary.y)) {
         float overlap = boundary.y - ball_pos.y;
-        overstep = max(overstep, overlap / (ball_vel.y * deltaT));
+        overstep = min(overstep, overlap / (ball_vel.y * deltaT));
     }
 
     // Jump back to boundary
@@ -33,6 +40,8 @@ bounce( vec2d_t axis, vec2d_t boundary ) {
     float progress = 1 - overstep;
 	ball_pos.x += (ball_vel.x * deltaT) * progress;
 	ball_pos.y += (ball_vel.y * deltaT) * progress;
+
+    mid_bounce = true;
 }
 
 bool_t
@@ -78,23 +87,43 @@ update_physics(int dT) {
     if (in_range(ball_pos.x, LEFT_PADDLE_X_LOW-BALL_SIZE, LEFT_PADDLE_X_HIGH)
         && in_range(ball_pos.y, left_paddle_pos-BALL_SIZE, left_paddle_pos + PADDLE_LENGTH ))
     {
+        // Calculate normal
         vec2d_t normal = {.x = 1};
         normal.y = map_range(ball_pos.y, left_paddle_pos, left_paddle_pos + PADDLE_LENGTH, 0.1, -0.1);
-        
-        vec2d_t boundary = {.x = LEFT_PADDLE_X_HIGH, .y = NaN};
+
+        // Calculate boundary
+        bool_t hit_top = ball_vel.y < 0;
+        vec2d_t boundary =
+        {
+            .x = LEFT_PADDLE_X_HIGH,
+            .y = hit_top ? left_paddle_pos - BALL_SIZE : left_paddle_pos + PADDLE_LENGTH
+        };
+
         bounce(normal, boundary);
+        return;
     }
 
     // Check for right paddle collision
     if (in_range(ball_pos.x, RIGHT_PADDLE_X_LOW-BALL_SIZE, RIGHT_PADDLE_X_HIGH)
         && in_range(ball_pos.y, right_paddle_pos-BALL_SIZE, right_paddle_pos + PADDLE_LENGTH ))
     {
+        // Calculate normal
         vec2d_t normal = {.x = -1};
         normal.y = map_range(ball_pos.y, right_paddle_pos, right_paddle_pos + PADDLE_LENGTH, 0.1, -0.1);
 
-        vec2d_t boundary = {.x = RIGHT_PADDLE_X_LOW-BALL_SIZE, .y = NaN};
+        // Calculate boundary
+        bool_t hit_top = ball_vel.y < 0;
+        vec2d_t boundary =
+        {
+            .x = RIGHT_PADDLE_X_LOW-BALL_SIZE,
+            .y = hit_top ? right_paddle_pos - BALL_SIZE : right_paddle_pos + PADDLE_LENGTH
+        };
+
         bounce(normal, boundary);
+        return;
     }
+
+    mid_bounce = false;
     
     // Detect collision with top/bottom walls
     if ( !in_range(ball_pos.y, 0, PHYSICS_BOUNDS_Y-BALL_SIZE) ) {
@@ -108,5 +137,6 @@ update_physics(int dT) {
         bounce(unit_x, unit_NaN);
         return;
     }
+
     return;
 }
