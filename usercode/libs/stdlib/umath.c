@@ -11,6 +11,29 @@
 
 #include "umath.h"
 
+bool_t is_nan(double x) {
+    union { uint64_t u; double f; } ieee754;
+    ieee754.f = x;
+    return ( (unsigned)(ieee754.u >> 32) & 0x7fffffff ) +
+           ( (unsigned)ieee754.u != 0 ) > 0x7ff00000;
+}
+
+double min(double x, double y) {
+    if (x < y) {
+        return x;
+    }
+
+    return y;
+} 
+
+double max(double x, double y) {
+    if (x > y) {
+        return x;
+    }
+
+    return y;
+} 
+
 double abs(double x){
     if (x < 0){
         return -x;
@@ -33,6 +56,42 @@ double pow(double base, int exponent) {
         result *= base;
     }
   
+    return result;
+}
+
+double sqrt(double x) {
+    int start, end = 0;
+    int mid;
+
+    double result;
+
+    while (start <= end)
+    {
+        mid = (start + end)/2;
+
+        if (mid * mid == x) {
+            result = mid;
+            break;
+        }
+
+        if (mid * mid < x){
+            result = start;
+            start = mid + 1;
+        } else{
+            end = mid-1;
+        }
+    }
+    
+    float increment = 0.1;
+    for (int i = 0; i < 5; i++){
+        while (result * result <= x) {
+            result+= increment;
+        }
+        
+        result -= increment;
+        increment /= 10; 
+    }
+
     return result;
 }
   
@@ -66,4 +125,14 @@ double sin(double x) {
     }
     return result;
 }
+
+double cos(double x) {
+    // Perform a phase translation and use sin
+    return sin(x + (PI/2));
+}
+
+double map_range(double x, double src_low, double src_high, double trg_low, double trg_high) {
+    return  ((trg_high - trg_low) / (src_high - src_low)) * (x - src_low);
+}
+
 #endif
