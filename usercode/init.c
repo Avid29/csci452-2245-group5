@@ -25,7 +25,7 @@ static proc_t in_spawn_table[] = {
 	PROCENT( idle, PRIO_DEFERRED, ".", "idle", "." ),
 
 	// the user shell
-	PROCENT( shell, PRIO_STD, "@", "shell" ),
+	PROCENT( i2c, PRIO_STD, "@", "i2c", "@" ),
 
 	// a dummy entry to use as a sentinel
 	// { TBLEND }

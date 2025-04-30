@@ -116,3 +116,7 @@ typedef struct proc_s {
 #include <usercode/progTUV.c>
 #include <usercode/progW.c>
 #endif
+
+#if defined(SPAWN_I2C)
+#include <usercode/i2c.c>
+#endif
