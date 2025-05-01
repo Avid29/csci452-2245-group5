@@ -39,6 +39,7 @@ static uint32_t pindex;     // index into pinwheel string
 
 // current system time
 uint32_t system_time;
+uint32_t clock_speed_khz;
 
 /*
 ** PRIVATE FUNCTIONS
@@ -132,6 +133,29 @@ static void clk_isr( int vector, int code ) {
 	outb( PIC1_CMD, PIC_EOI );
 }
 
+/**
+** Name:	clk_calibrate_isr
+**
+** The ISR for clock calibration
+**
+** @param vector    Vector number for the clock interrupt
+** @param code      Error code (0 for this interrupt)
+*/
+static void clk_calibrate_isr( int vector, int code ) {
+	/* Signal that we saw something */
+	++system_time;
+
+	// tell the PIC we're done
+	outb( PIC1_CMD, PIC_EOI );
+}
+
+/* https://stackoverflow.com/a/9887979 */
+__attribute__((always_inline)) static inline uint64_t rdtsc() {
+	uint64_t result;
+	__asm__ volatile ("rdtsc" : "=A" (result));
+	return result;
+}
+
 /*
 ** PUBLIC FUNCTIONS
 */
@@ -161,6 +185,31 @@ void clk_init( void ) {
 	outb( PIT_0_PORT, divisor & 0xff );        // LSB of divisor
 	outb( PIT_0_PORT, (divisor >> 8) & 0xff ); // MSB of divisor
 
+	install_isr( VEC_TIMER, clk_calibrate_isr );
+	__asm__ volatile ("sti");
+	uint32_t then = system_time;
+	/* Sit tight */
+	while (system_time == then);
+	/* Now we get our anchor point...  */
+	uint64_t then_tsc = rdtsc();
+	then = system_time;
+	/* Sit tight again... */
+	while (system_time == then);
+	/* Okay, let's see how it compares... */
+	uint64_t now_tsc = rdtsc();
+	__asm__ volatile ("cli");
+	cio_printf("We have experienced %d cycles\n", (now_tsc - then_tsc));
+	clock_speed_khz = (now_tsc - then_tsc) * TICKS_PER_MS; // ticks / 1ms = kHz
+	cio_printf("Clock speed is %d kHz\n", clock_speed_khz);
+
 	// register the second-stage ISR
 	install_isr( VEC_TIMER, clk_isr );
+}
+
+void sleep_micros(unsigned int micros) {
+	assert(micros < 1000); // Way too long for this...
+	uint64_t now_tsc = rdtsc();
+	uint64_t delta = (clock_speed_khz/1000)*micros;
+	uint64_t deadline_tsc = now_tsc+delta;
+	while(rdtsc()<deadline_tsc);
 }

@@ -329,9 +329,9 @@ int main( void ) {
 	km_init();		// MUST BE FIRST
 
 	// other module initialization calls here
+	sio_init();     // serial i/o
 	clk_init();     // clock
 	pcb_init();     // process (PCBs, queues, scheduler)
-	sio_init();     // serial i/o
 	sys_init();     // system call
 	user_init();    // user code handling
 

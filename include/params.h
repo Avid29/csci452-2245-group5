@@ -27,7 +27,7 @@
 #define N_ARGS         10
 
 // Clock frequency (Hz)
-#define CLOCK_FREQ     1000
-#define TICKS_PER_MS   1
+#define CLOCK_FREQ     (1000)
+#define TICKS_PER_MS   (CLOCK_FREQ/1000)
 
 #endif
