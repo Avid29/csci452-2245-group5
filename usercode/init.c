@@ -107,6 +107,12 @@ USERMAIN( init ) {
 	// test the sio
 	write( CHAN_SIO, "$+$\n", 4 );
 
+	while (1) {
+		write(CHAN_BEEP, kubernetes_raw, kubernetes_raw_len);
+		usprint(buf, "beeped!\n");
+		DELAY(MED);
+	}
+
 	usprint( buf, "%s: started\n", name );
 	cwrites( buf );
 
