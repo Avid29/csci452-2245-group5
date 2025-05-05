@@ -422,8 +422,8 @@ int main( void ) {
 	cio_puts_at( 0, 6, "================================================================================" );
 #endif
 
-	sio_flush( SIO_RX | SIO_TX );
-	sio_enable( SIO_RX );
+	/* sio_flush( SIO_RX | SIO_TX ); */
+	/* sio_enable( SIO_RX ); */
 
 	cio_puts( "System initialization complete.\n" );
 	cio_puts( "-------------------------------\n" );
