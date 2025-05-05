@@ -103,7 +103,7 @@ GEN_OPTIONS = -DOS_CONFIG -DSYSTEM_STATUS=5 -DFORCE_INLINING \
 # If not defined, SANITY defaults to 9999.
 #
 
-DBG_OPTIONS = -DRPT_INT_UNEXP -DTRACE_CX -DCIO_DUP2_SIO
+DBG_OPTIONS = -DRPT_INT_UNEXP -DCIO_DUP2_SIO # -DTRACE_CX
 
 #
 # T_ options are used to define bits in a "tracing" bitmask, to allow
@@ -233,6 +233,7 @@ QEMUOPTS = -drive file=disk.img,index=0,media=disk,format=raw $(QEMUEXTRA)
 
 .SUFFIXES:	.S .b .X .i
 
+
 .c.X:
 	$(CC) $(CFLAGS) -g -c -Wa,-adhln $*.c > $*.X
 
@@ -290,7 +291,7 @@ vars.%: FORCE
 disk.img: include/offsets.h boot.b kernel.b BuildImage
 	./BuildImage -d usb -o disk.img -b boot.b kernel.b $(KLDPT)
 
-kernel:	$(OBJECTS) vars.CFLAGS vars.LDFLAGS vars.KLDFLAGS
+kernel:	include/kubernetes.raw.h $(OBJECTS) vars.CFLAGS vars.LDFLAGS vars.KLDFLAGS
 	$(LD) $(LDFLAGS) $(KLDFLAGS) -o kernel $(OBJECTS)
 	$(OBJDUMP) -S kernel > kernel.asm
 	$(NM) -n kernel > kernel.sym
@@ -307,6 +308,9 @@ kernel.b:	kernel vars.BLDFLAGS
 
 # all object files
 $(OBJECTS):	vars.CFLAGS
+
+include/kubernetes.raw.h: kubernetes.raw
+	xxd -i kubernetes.raw > include/kubernetes.raw.h
 
 #
 # Debugging aid
@@ -395,7 +399,7 @@ include/offsets.h:	Offsets
 #
 
 clean:
-	rm -f *.nl *.nll *.lst *.asm *.sym *.b *.i *.o *.X *.dis *.hex
+	rm -f *.nl *.nll *.lst *.asm *.sym *.b *.i *.o *.X *.dis *.hex include/*.raw.h
 
 realclean:	clean
 	rm -f kernel *.img *.map BuildImage Offsets

@@ -15,7 +15,7 @@
 
 #ifdef KERNEL_SRC
 
-int beeper_write(char *buf, uint_t length);
+int beeper_write(uint8_t *buf, uint_t length);
 
 #endif  /* KERNEL_SRC */
 

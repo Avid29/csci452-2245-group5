@@ -9,6 +9,7 @@
 ** code in one honkin' big file for convenience.
 */
 
+#include <kubernetes.raw.h>
 #include <common.h>
 
 #include <lib.h>
