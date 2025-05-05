@@ -1,3 +1,4 @@
+*.raw.h
 boot.s
 LOG
 kernel

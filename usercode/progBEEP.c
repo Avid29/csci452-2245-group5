@@ -1,7 +1,6 @@
 #ifndef PROGBEEP_INC_C_
 #define PROGBEEP_INC_C_
 #include <common.h>
-#include <chom.raw.h>
 
 /**
 ** User function main beep:  beep beep beep
@@ -17,7 +16,7 @@ USERMAIN( progBEEP ) {
 
 	cwrites("I'm beepin!\n");
 
-	int ret = write(CHAN_BEEP, chom_raw, chom_raw_len);
+	int ret = write(CHAN_BEEP, kubernetes_raw, kubernetes_raw_len);
 	usprint(buf, " Returned from a beep write... Got %d\n", ret);
 	cwrites(buf);
 
