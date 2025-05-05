@@ -11,7 +11,6 @@
 */
 
 USERMAIN( progBEEP ) {
-	char *name = argv[0] ? argv[0] : "nobody";
 	char buf[128];
 
 	cwrites("I'm beepin!\n");

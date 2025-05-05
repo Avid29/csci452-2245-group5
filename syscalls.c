@@ -552,7 +552,7 @@ SYSIMPL(write) {
 
 		} else if( chan == CHAN_BEEP) {
 
-			err = beeper_write( buf, length );
+			err = beeper_write( (uint8_t *)buf, length );
 			if( err < 0 ) {
 				rval = err;
 			}
