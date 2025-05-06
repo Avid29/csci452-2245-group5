@@ -1,0 +1,137 @@
+#include "PS2Controller.h"
+
+#include <cio.h>
+#include <x86/ops.h>
+
+// The data port (R/W)
+#define DATA_PORT   (0x60)
+
+// The status register (Read-Only)
+#define STATUS_REG  (0x64)
+
+// The command register (Write-only)
+#define COMMAND_REG (0x64)
+
+static int DataAvailable_Impl() { return inb(STATUS_REG) & 0x01; }
+static int ControllerBusy_Impl() { return inb(STATUS_REG) & 0x02; }
+static void WriteCommand_Impl(enum PS2Controller_Command command) { outb(COMMAND_REG, (uint8_t)command); }
+static void WriteData_Impl(uint8_t data) { outb(DATA_PORT, data); }
+static void ReadData_Impl(uint8_t* response) { *response = inb(DATA_PORT); }
+
+
+// Perform a controller self test
+static int SelfTest(PS2Controller_t* controller, enum PS2Controller_SelfTest* result)
+{
+    uint8_t tmpResult, ret;
+    ret = PS2Controller_ProcessCommand(controller, PS2_CMD_TEST_CONTROLLER, 0, &tmpResult);
+    *result = tmpResult;
+    return ret;
+}
+
+// Test port 1
+static int PortTest(PS2Controller_t* controller, enum PS2Controller_PortTest* result)
+{
+    uint8_t tmpResult, ret;
+    ret = PS2Controller_ProcessCommand(controller, PS2_CMD_TEST_PORT1, 0, &tmpResult);
+    *result = tmpResult;
+    return ret;
+}
+
+int PS2Controller_Init(PS2Controller_t* controller)
+{
+    int ret;
+
+    // Initialize the opaque structure
+    controller->WriteCommand = &WriteCommand_Impl;
+    controller->WriteData = &WriteData_Impl;
+    controller->ReadData = &ReadData_Impl;
+    controller->DataAvailable = &DataAvailable_Impl;
+    controller->ControllerBusy = &ControllerBusy_Impl;
+
+    // Disable port 1
+    if ((ret = PS2Controller_ProcessCommand(controller, PS2_CMD_DISABLE_PORT1, 0, NULL)))
+    {
+        return ret;
+    }
+
+    // Disable port 2
+    if ((ret = PS2Controller_ProcessCommand(controller, PS2_CMD_DISABLE_PORT2, 0, NULL)))
+    {
+        return ret;
+    }
+
+    // Flush the buffer
+    if (controller->DataAvailable())
+    {
+        uint8_t ignored;
+        controller->ReadData(&ignored);
+    }
+
+    // Read the current configuration byte
+    union PS2Controller_Config config;
+    PS2Controller_ReadConfig(controller, &config);
+
+    // Disable interrupts and translation, enable clock
+    config.port1InterruptEnabled = 0;
+    config.port2InterruptEnabled = 0;
+    config.port1ClockDisabled = 0;
+
+    // Write the configuration byte back
+    PS2Controller_WriteConfig(controller, config);
+
+    // Perform a self test
+    cio_printf("Running controller self-test...");
+
+    enum PS2Controller_SelfTest selfTest;
+    SelfTest(controller, &selfTest);
+
+    // Check the self test result
+    if (selfTest != PS2_SelfTest_Passed)
+    {
+        cio_printf("FAILED!\n");
+        return -100;   // Self test failed
+    }
+    cio_printf("PASSED!\n");
+
+    // Perform a test of port 1
+    cio_printf("Testing port 1... ");
+    enum PS2Controller_PortTest portTest;
+    PortTest(controller, &portTest);
+
+    // Check the port test result
+    if (portTest != PS2_PortTest_Passed)
+    {
+        cio_printf("FAILED!\n\tReason: ");
+        switch (portTest)
+        {
+            case PS2_PortTest_Clk_Stuck_Low:
+                cio_printf("Clock line stuck low\n");
+                break;
+            PS2_PortTest_Clk_Stuck_High:
+                cio_printf("Clock line stuck high\n");
+                break;
+            PS2_PortTest_Data_Stuck_Low:
+                cio_printf("Data line stuck low\n");
+                break;
+            PS2_PortTest_Data_Stuck_High:
+                cio_printf("Data line stuck high\n");
+                break;
+            default:
+                cio_printf("Unknown\n");
+                break;
+        }
+        return -100 - (int)portTest;  // Port test failed
+    }
+    cio_printf("PASSED!\n");
+
+    // Enable port 1
+    if ((ret = PS2Controller_ProcessCommand(controller, PS2_CMD_ENABLE_PORT1, 0, NULL)))
+    {
+        return ret;
+    }
+
+    return 0;
+}
+
+
+
