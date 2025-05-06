@@ -353,6 +353,22 @@ switch:
 #endif
 
 /*
+** Swap the graphcs mode
+*/
+
+	mov		$0x13, %ax
+	int		$0x10
+
+/*
+** Setup SSE floating points
+*/
+
+	mov	%eax, %cr0
+	and	%ax, 0xFFF9	/* clear coprocessor emulation CR0.EM */
+	or	%ax, 0x2	/* set coprocessor monitoring CR0.MP */
+	mov	%cr0, %eax
+	fninit
+/*
 ** The IDTR and GDTR are loaded relative to this segment, so we must
 ** use the full offsets from the beginning of the segment (0000:0000);
 ** however, we were loaded at 0000:7c00, so we need to add that in.

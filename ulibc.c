@@ -16,11 +16,7 @@
 **********************************************
 */
 
-#include <usercode/ublkmov.c>
-#include <usercode/umemclr.c>
-#include <usercode/umemcpy.c>
-#include <usercode/umemmove.c>
-#include <usercode/umemset.c>
+#include <usercode/libs/stdlib/umem.c>
 
 /*
 **********************************************
@@ -28,14 +24,7 @@
 **********************************************
 */
 
-#include <usercode/upad.c>
-#include <usercode/upadstr.c>
-#include <usercode/usprint.c>
-#include <usercode/ustr2int.c>
-#include <usercode/ustrcat.c>
-#include <usercode/ustrcmp.c>
-#include <usercode/ustrcpy.c>
-#include <usercode/ustrlen.c>
+#include <usercode/libs/stdlib/ustrings.c>
 
 /*
 **********************************************
@@ -43,13 +32,15 @@
 **********************************************
 */
 
-#include <usercode/ubound.c>
-#include <usercode/ucvtdec.c>
-#include <usercode/ucvtdec0.c>
-#include <usercode/ucvthex.c>
-#include <usercode/ucvtoct.c>
-#include <usercode/ucvtuns.c>
-#include <usercode/ucvtuns0.c>
+#include <usercode/libs/stdlib/uconvert.c>
+
+/*
+**********************************************
+** MATH FUNCTIONS
+**********************************************
+*/
+
+#include <usercode/libs/stdlib/umath.c>
 
 /*
 **********************************************
@@ -57,4 +48,12 @@
 **********************************************
 */
 
-#include <usercode/uextras.c>
+#include <usercode/libs/syslib/uextras.c>
+
+/*
+**********************************************
+** GRAPHICAL LIBRARY FUNCTIONS
+**********************************************
+*/
+
+#include <usercode/libs/graphics/ugraphics.c>

@@ -121,3 +121,7 @@ typedef struct proc_s {
 #include <usercode/progTUV.c>
 #include <usercode/progW.c>
 #endif
+
+#if defined(SPAWN_PONG)
+#include <usercode/pong.c>
+#endif

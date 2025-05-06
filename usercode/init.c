@@ -25,7 +25,10 @@ static proc_t in_spawn_table[] = {
 	PROCENT( idle, PRIO_DEFERRED, ".", "idle", "." ),
 
 	// the user shell
-	PROCENT( shell, PRIO_STD, "@", "shell" ),
+	// PROCENT( shell, PRIO_STD, "@", "shell" ),
+
+	// pong
+	PROCENT( pong, PRIO_STD, "Z", "pong" ),
 
 	// a dummy entry to use as a sentinel
 	// { TBLEND }
@@ -86,6 +89,8 @@ static void process( proc_t *proc )
 	}
 }
 
+char vga_buffer[0x20000];
+
 /*
 ** The initial user process. Should be invoked with zero or one
 ** argument; if provided, the first argument should be the ASCII
@@ -107,7 +112,12 @@ USERMAIN( init ) {
 	// test the sio
 	write( CHAN_SIO, "$+$\n", 4 );
 
-	while (1) {
+	// test vga dump
+	umemset(vga_buffer, 0x20000, 0x0D);
+	display( vga_buffer );
+
+	// test beep
+	for (int i = 0; i < 10; i++) {
 		write(CHAN_BEEP, kubernetes_raw, kubernetes_raw_len);
 		usprint(buf, "beeped!\n");
 		DELAY(MED);

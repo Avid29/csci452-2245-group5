@@ -83,9 +83,7 @@ USERMAIN(progABC); USERMAIN(progDE);  USERMAIN(progFG); USERMAIN(progH);
 USERMAIN(progI);   USERMAIN(progJ);   USERMAIN(progKL); USERMAIN(progMN);
 USERMAIN(progO);   USERMAIN(progP);   USERMAIN(progQ);  USERMAIN(progR);
 USERMAIN(progS);   USERMAIN(progTUV); USERMAIN(progW);  USERMAIN(progX);
-USERMAIN(progY);   USERMAIN(progZ);
-
-USERMAIN(progBEEP);
+USERMAIN(progY);   USERMAIN(progZ); USERMAIN(pong); USERMAIN(progBEEP);
 
 #endif /* !ASM_SRC */
 
@@ -115,7 +113,6 @@ USERMAIN(progBEEP);
 ** from other processes and are never spawned directly.
 */
 
-#define SPAWN_BEEP
 /* #define SPAWN_A */
 /* #define SPAWN_B */
 /* #define SPAWN_C */
@@ -137,5 +134,8 @@ USERMAIN(progBEEP);
 /* #define SPAWN_T */
 /* #define SPAWN_U */
 /* #define SPAWN_V */
+
+/* #define SPAWN_BEEP */
+#define SPAWN_PONG
 
 #endif

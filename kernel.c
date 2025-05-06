@@ -271,11 +271,13 @@ int main( void ) {
 	** and queue modules.
 	*/
 
+	/*
 #if defined(CONSOLE_STATS) 
 	cio_init( stats );
 #else
 	cio_init( NULL );	// no console callback routine
 #endif
+	*/
 
 	cio_clearscreen();  // wipe out whatever is there
 

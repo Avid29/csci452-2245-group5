@@ -8,14 +8,16 @@
 #  FILE SECTION  #
 ##################
 
+MODE ?= cs
+
 #
 # OS files
 #
 
 OS_C_SRC = cio.c clock.c klibc.c kmem.c list.c main.c procs.c \
-	   sio.c support.c beeper.c syscalls.c user.c
+	   sio.c support.c beeper.c syscalls.c user.c vga.c
 OS_C_OBJ = cio.o clock.o klibc.o kmem.o list.o main.o procs.o \
-	   sio.o support.o beeper.o syscalls.o user.o
+	   sio.o support.o beeper.o syscalls.o user.o vga.o
 
 OS_S_SRC = startup.o isrs.o
 OS_S_OBJ = startup.o isrs.o
@@ -152,7 +154,7 @@ CPPFLAGS = $(USER_OPTIONS) -nostdinc $(INCLUDES)
 # Compiler/assembler/etc. settings for 32-bit binaries
 #
 CC = gcc
-CFLAGS = -m32 -ggdb -fno-pic -fno-pie -std=c99 -fno-stack-protector -fno-builtin -Wall -Wstrict-prototypes -MD $(CPPFLAGS)
+CFLAGS = -m32 -mfpmath=387 -ggdb -fno-pic -fno-pie -std=c99 -fno-stack-protector -fno-builtin -Wall -Wstrict-prototypes -MD $(CPPFLAGS)
 # uncomment this if you want optimization
 # CFLAGS += -O2
 
@@ -190,12 +192,20 @@ HEXDUMP = hexdump
 # QEMU settings
 #
 
-# Location of the QEMU binary
 #
-QEMU = /home/course/csci352/bin/qemu-system-i386
+# Enivronment dependent
+#
+ifeq ($(MODE),cs)
+	# try to generate a unique GDB port
+	GDBPORT = $(shell expr `id -u` % 5000 + 25000)
+	QEMU = /home/course/csci352/bin/qemu-system-i386
+else ifeq ($(MODE),local)
+	GDBPORT := 5000
+	QEMU = qemu-system-i386
+else
+	$(error Unknown MODE '$(MODE)', valid options are 'local' or 'cs')
+endif
 
-# try to generate a unique GDB port
-GDBPORT = $(shell expr `id -u` % 5000 + 25000)
 
 # QEMU's gdb stub command line changed in 0.11
 QEMUGDB = $(shell if $(QEMU) -help | grep -q '^-gdb'; \

@@ -60,6 +60,7 @@ unsigned char dupcio;
 /*
 ** Video state
 */
+static bool_t is_cio_initialized = false;
 static unsigned int scroll_min_x, scroll_min_y;
 static unsigned int scroll_max_x, scroll_max_y;
 static unsigned int curr_x, curr_y;
@@ -81,6 +82,9 @@ static void (*notify)(int);
 ** setcursor: set the cursor location (screen coordinates)
 */
 static void setcursor( void ) {
+	if (!is_cio_initialized)
+		return;
+	
 	unsigned addr;
 	unsigned int y = curr_y;
 
@@ -100,6 +104,9 @@ static void setcursor( void ) {
 ** putchar_at: physical output to the video memory
 */
 static void putchar_at( unsigned int x, unsigned int y, unsigned int c ) {
+	if (!is_cio_initialized)
+		return;
+
 	/*
 	** If x or y is too big or small, don't do any output.
 	*/
@@ -143,6 +150,9 @@ static void putchar_at( unsigned int x, unsigned int y, unsigned int c ) {
 */
 void cio_setscroll( unsigned int s_min_x, unsigned int s_min_y,
 					  unsigned int s_max_x, unsigned int s_max_y ) {
+	if (!is_cio_initialized)
+		return;
+
 	scroll_min_x = bound( min_x, s_min_x, max_x );
 	scroll_min_y = bound( min_y, s_min_y, max_y );
 	scroll_max_x = bound( scroll_min_x, s_max_x, max_x );
@@ -156,6 +166,9 @@ void cio_setscroll( unsigned int s_min_x, unsigned int s_min_y,
 ** Cursor movement in the scroll region
 */
 void cio_moveto( unsigned int x, unsigned int y ) {
+	if (!is_cio_initialized)
+		return;
+
 	curr_x = bound( scroll_min_x, x + scroll_min_x, scroll_max_x );
 	curr_y = bound( scroll_min_y, y + scroll_min_y, scroll_max_y );
 	setcursor();
@@ -172,6 +185,9 @@ unsigned int cio_where( void ) {
 ** The putchar family
 */
 void cio_putchar_at( unsigned int x, unsigned int y, unsigned int c ) {
+	if (!is_cio_initialized)
+		return;
+
 	if( ( c & 0x7f ) == '\n' ) {
 		unsigned int limit;
 
@@ -203,6 +219,9 @@ void cio_putchar_at( unsigned int x, unsigned int y, unsigned int c ) {
 #define cio_putchar   putchar
 #else
 void cio_putchar( unsigned int c ) {
+	if (!is_cio_initialized)
+		return;
+
 	/*
 	** If we're off the bottom of the screen, scroll the window.
 	*/
@@ -246,6 +265,9 @@ void cio_putchar( unsigned int c ) {
 ** The puts family
 */
 void cio_puts_at( unsigned int x, unsigned int y, const char *str ) {
+	if (!is_cio_initialized)
+		return;
+
 	unsigned int ch;
 
 	while( (ch = *str++) != '\0' && x <= max_x ) {
@@ -258,6 +280,9 @@ void cio_puts_at( unsigned int x, unsigned int y, const char *str ) {
 #define cio_puts(x)   fputs( x, stdout )
 #else
 void cio_puts( const char *str ) {
+	if (!is_cio_initialized)
+		return;
+
 	unsigned int ch;
 
 	while( (ch = *str++) != '\0' ) {
@@ -270,12 +295,18 @@ void cio_puts( const char *str ) {
 ** Write a "sized" buffer (like cio_puts(), but no NUL)
 */
 void cio_write( const char *buf, int length ) {
+	if (!is_cio_initialized)
+		return;
+
 	for( int i = 0; i < length; ++i ) {
 		cio_putchar( buf[i] );
 	}
 }
 
 void cio_clearscroll( void ) {
+	if (!is_cio_initialized)
+		return;
+
 	unsigned int nchars = scroll_max_x - scroll_min_x + 1;
 	unsigned int l;
 	unsigned int c;
@@ -290,6 +321,9 @@ void cio_clearscroll( void ) {
 }
 
 void cio_clearscreen( void ) {
+	if (!is_cio_initialized)
+		return;
+
 	unsigned short *to = VIDEO_ADDR( min_x, min_y );
 	unsigned int    nchars = ( max_y - min_y + 1 ) * ( max_x - min_x + 1 );
 
@@ -301,6 +335,9 @@ void cio_clearscreen( void ) {
 
 
 void cio_scroll( unsigned int lines ) {
+	if (!is_cio_initialized)
+		return;
+
 	unsigned short *from;
 	unsigned short *to;
 	int nchars = scroll_max_x - scroll_min_x + 1;
@@ -337,6 +374,9 @@ void cio_scroll( unsigned int lines ) {
 }
 
 static int mypad( int x, int y, int extra, int padchar ) {
+	if (!is_cio_initialized)
+		return 0;
+
 	while( extra > 0 ) {
 		if( x != -1 || y != -1 ) {
 			cio_putchar_at( x, y, padchar );
@@ -352,6 +392,9 @@ static int mypad( int x, int y, int extra, int padchar ) {
 
 static int mypadstr( int x, int y, char *str, int len, int width,
 				   int leftadjust, int padchar ) {
+	if (!is_cio_initialized)
+		return 0;
+
 	int extra;
 
 	if( len < 0 ) {
@@ -375,6 +418,9 @@ static int mypadstr( int x, int y, char *str, int len, int width,
 }
 
 static void do_printf( int x, int y, char **f ) {
+	if (!is_cio_initialized)
+		return;
+
 	char *fmt = *f;
 	int  *ap;
 	char buf[ 12 ];
@@ -501,10 +547,16 @@ static void do_printf( int x, int y, char **f ) {
 }
 
 void cio_printf_at( unsigned int x, unsigned int y, char *fmt, ... ) {
+	if (!is_cio_initialized)
+		return;
+
 	do_printf( x, y, &fmt );
 }
 
 void cio_printf( char *fmt, ... ) {
+	if (!is_cio_initialized)
+		return;
+
 	do_printf( -1, -1, &fmt );
 }
 
@@ -670,6 +722,9 @@ static void keyboard_isr( int vector, int code ) {
 }
 
 int cio_getchar( void ) {
+	if (!is_cio_initialized)
+		return 0;
+
 	char    c;
 	int interrupts_enabled = r_eflags() & EFL_IF;
 
@@ -694,6 +749,9 @@ int cio_getchar( void ) {
 }
 
 int cio_gets( char *buffer, unsigned int size ) {
+	if (!is_cio_initialized)
+		return 0;
+	
 	char    ch;
 	int count = 0;
 
@@ -758,6 +816,8 @@ void cio_init( void (*fcn)(int) ) {
 	** Set up the interrupt handler for the keyboard
 	*/
 	install_isr( VEC_KBD, keyboard_isr );
+
+	is_cio_initialized = true;
 
 #ifdef CIO_DUP2_SIO
 	dupcio = 0;
