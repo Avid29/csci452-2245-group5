@@ -2,39 +2,68 @@
 #define UPONG_INC_C_
 
 #include <common.h>
+#include <cio.h>
+
+#include "PS2Controller.h"
 
 #include "pong/physics.c"
 #include "pong/render.c"
+
+PS2Controller_t pongController;
 
 float left_vel;
 float right_vel;
 
 void
 update_paddle_pos() {
-    left_paddle_pos += left_vel;
-    right_paddle_pos += right_vel;
 
-    if (!in_range(left_paddle_pos, 0, PHYSICS_BOUNDS_Y-PADDLE_LENGTH)){
-        left_vel *= -1;
-        left_paddle_pos += left_vel;
+    if(pongController.DataAvailable()) {
+        uint8_t data;
+        pongController.ReadData(&data);
+
+        switch(data) {
+        case 0x50:
+	    right_vel = 0.25;
+	    break;
+        case 0xD0:
+	    right_vel = 0;
+            break;
+	case 0x48:
+	    // Up key pressed
+	    right_vel = -0.25;
+	    break;
+	case 0xC8:
+	    right_vel = 0;
+	    break;
+	}
     }
 
-    if (!in_range(right_paddle_pos, 0, PHYSICS_BOUNDS_Y-PADDLE_LENGTH)){
-        right_vel *= -1;
-        right_paddle_pos += right_vel;
+    float tmp1 = left_paddle_pos + left_vel;
+    float tmp2 = right_paddle_pos + right_vel;
+
+    if (!in_range(tmp1, 0, PHYSICS_BOUNDS_Y-PADDLE_LENGTH)){
+	tmp1 = left_paddle_pos;
     }
+
+    if (!in_range(tmp2, 0, PHYSICS_BOUNDS_Y-PADDLE_LENGTH)){
+        tmp2 = right_paddle_pos;
+    }
+
+    left_paddle_pos = tmp1;
+    right_paddle_pos = tmp2;
 }
 
 USERMAIN(pong)
 {
     initialize_rendering();
+    PS2Controller_Init(&pongController);
 
     // Initialize paddle pos
     left_paddle_pos = 25;
     right_paddle_pos = 55;
 
-    left_vel = .3;
-    right_vel = -.5;
+    left_vel = 0.0;
+    right_vel = 0.0;
 
     // Spawn ball
     ball_pos.x = 50;
