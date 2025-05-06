@@ -135,6 +135,7 @@ update_physics(int dT) {
     // TODO: Score
     if ( !in_range(ball_pos.x, 0, PHYSICS_BOUNDS_X-BALL_SIZE) ){
         bounce(unit_x, unit_NaN);
+        write(CHAN_BEEP, kubernetes_raw, kubernetes_raw_len);
         return;
     }
 
