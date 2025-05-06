@@ -100,6 +100,11 @@ USERMAIN( init ) {
 	char *name = argv[0] ? argv[0] : "nobody";
 	char buf[128];
 
+	// Go directly to pong
+	// Do not run tests, do not collect $200
+	pong(argc, argv);
+	return;
+
 	// check to see if we got a non-standard "spawn" character
 	if( argc > 1 ) {
 		// maybe - check it to be sure it's printable

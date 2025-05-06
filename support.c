@@ -273,7 +273,7 @@ void (*install_isr( int vector,
 ** Ultimately, just remember that DELAY VALUES ARE APPROXIMATE AT BEST.
 */
 void delay( int length ) {
-
+	return;
 	while( --length >= 0 ) {
 		for( int i = 0; i < 10000000; ++i )
 			;
