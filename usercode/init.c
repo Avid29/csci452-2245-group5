@@ -103,7 +103,7 @@ USERMAIN( init ) {
 	// Go directly to pong
 	// Do not run tests, do not collect $200
 	pong(argc, argv);
-	return;
+	return 0;
 
 	// check to see if we got a non-standard "spawn" character
 	if( argc > 1 ) {

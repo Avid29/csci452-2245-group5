@@ -16,8 +16,7 @@ PS2PongController_t pongController;
 float left_vel;
 float right_vel;
 
-void
-update_paddle_pos() {
+static void update_paddle_pos(void) {
     // Update the paddles according to keyboard input
     if(PS2PongController_Update(&pongController)) {
         if(pongController.inputStates.reset) {

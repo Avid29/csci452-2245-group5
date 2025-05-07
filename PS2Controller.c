@@ -133,20 +133,21 @@ int PS2Controller_Init(PS2Controller_t* controller)
             case PS2_PortTest_Clk_Stuck_Low:
                 cio_printf("Clock line stuck low\n");
                 break;
-            PS2_PortTest_Clk_Stuck_High:
+            case PS2_PortTest_Clk_Stuck_High:
                 cio_printf("Clock line stuck high\n");
                 break;
-            PS2_PortTest_Data_Stuck_Low:
+            case PS2_PortTest_Data_Stuck_Low:
                 cio_printf("Data line stuck low\n");
                 break;
-            PS2_PortTest_Data_Stuck_High:
+            case PS2_PortTest_Data_Stuck_High:
                 cio_printf("Data line stuck high\n");
                 break;
             default:
                 cio_printf("Unknown\n");
                 break;
         }
-        return -100 - (int)portTest;  // Port test failed
+        
+	return -100 - (int)portTest;  // Port test failed
     }
     cio_printf("PASSED!\n");
 
