@@ -1,0 +1,25 @@
+Shaun Thornton (sdt8987)
+Undergrad 2021-2025
+
+This custom PCB was designed for my System Programming (csci452) course:
+ - It was designed using an open source PCB design software called KiCad
+   - Total schematic design time ~6 hrs
+   - Total layout design time ~12+ hrs
+   - The final PCB has four layers
+     - Top and bottom layers contain signals
+     - Inner layer 1 is a 3.3v copper pour
+     - Inner layer 2 is a GND copper pour
+ - It was manufactured by a company called JLCPCB
+   - I paid $1.80 (+$18 shipping) and received 5x unpopulated boards
+ - All components were purchased through DigiKey (parts distributer)
+ - The surface mount soldering was performed in the RIT Surface Mount Assembly Lab (Slaughter Hall)
+   - Dr. Martin K. Anselm (mkamet@rit.edu) managed the lab
+   - A student lab assistant named Isaac Becker (igb3739@rit.edu) showed me how to use the equipment
+     - He also took care of soldering many of the smaller parts that I couldn't manage
+   - We used a reflow oven to solder all components except for the LEDs (too fragile) and the PS2 connector
+     - LEDs were layer soldered with a heat gun, PS2 connector was soldered with a regular soldering iron
+
+The PCB worked without any issues or reworks.
+
+This project was so much fun. I can't wait to design a new PCB someday,
+~ Shaun

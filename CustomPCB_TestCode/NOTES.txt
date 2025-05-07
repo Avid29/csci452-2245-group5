@@ -1,0 +1,13 @@
+Shaun Thornton (sdt8987)
+Undergrad 2021-2025
+
+These files are part of a simple Arduino-based demo of the custom PCB.
+
+The '.pde' file runs under a computer program called "Processing"
+The '.ino' and '.h' files are part of an Arduino IDE project
+
+Led.h is a simple library for interacting with the LED driver on the PCB.
+Multiplexer.h is a simple library for interacting with the I2C multiplexer on the PCB.
+Nunchuck.h is a simple library for reading data from Wii Nunchuks over I2c.
+
+~ Shaun
