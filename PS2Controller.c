@@ -25,8 +25,8 @@
 
 // Implementations of the PS2 controller structure function pointers.
 // These are static and are only intended to be function pointer targets.
-static int DataAvailable_Impl() { return inb(STATUS_REG) & 0x01; }
-static int ControllerBusy_Impl() { return inb(STATUS_REG) & 0x02; }
+static int DataAvailable_Impl(void) { return inb(STATUS_REG) & 0x01; }
+static int ControllerBusy_Impl(void) { return inb(STATUS_REG) & 0x02; }
 static void WriteCommand_Impl(enum PS2Controller_Command command) {
 	outb(COMMAND_REG, (uint8_t)command); }
 static void WriteData_Impl(uint8_t data) { outb(DATA_PORT, data); }
@@ -98,9 +98,9 @@ int PS2Controller_Init(PS2Controller_t* controller)
     PS2Controller_ReadConfig(controller, &config);
 
     // Disable interrupts and translation, enable clock
-    config.port1InterruptEnabled = 0;
-    config.port2InterruptEnabled = 0;
-    config.port1ClockDisabled = 0;
+    config.fields.port1InterruptEnabled = 0;
+    config.fields.port2InterruptEnabled = 0;
+    config.fields.port1ClockDisabled = 0;
 
     // Write the configuration byte back
     PS2Controller_WriteConfig(controller, config);

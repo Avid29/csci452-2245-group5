@@ -303,13 +303,6 @@ static inline int PS2Controller_ProcessCommand(
     return 0;   // Success
 }
 
-// Determines whether data is available
-static inline int PS2Controller_DataAvailable(
-	PS2Controller_t *controller)
-{
-    return controller->DataAvailable();
-}
-
 // Read the configuration register
 static inline int PS2Controller_ReadConfig(
 	PS2Controller_t* controller,
