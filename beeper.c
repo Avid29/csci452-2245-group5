@@ -8,7 +8,7 @@
 #include <x86/pit.h>
 
 // Audio sample rate (Hz)
-#define BITRATE 44100
+#define BITRATE 70000
 
 int beeper_write(uint8_t *buf, uint_t length)
 {
@@ -29,11 +29,10 @@ int beeper_write(uint8_t *buf, uint_t length)
 		uint32_t divisor = (amplitude * PIT_FREQ) / (BITRATE * 256);
 
 		// Ignore all but extreme swings
-		if (amplitude > 128+32 || amplitude < 128-32) {
-			outb(PIT_2_PORT, divisor & 0xff);
-			outb(PIT_2_PORT, (divisor >> 8) & 0xff);
-		}
-		sleep_micros(1000000/BITRATE); // (1000000=second->microsecond)
+		sleep_micros_setup(1000000/BITRATE); // (1000000=second->microsecond)
+		outb(PIT_2_PORT, divisor & 0xff);
+		outb(PIT_2_PORT, (divisor >> 8) & 0xff);
+		sleep_micros_finish();
 	}
 
 	/* Unset speaker clock gate */

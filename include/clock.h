@@ -51,7 +51,26 @@ extern uint32_t clock_speed_khz;
 */
 void clk_init( void );
 
+/**
+** Name: sleep_micros
+**
+** Sleep for `micros` microseconds. Must be called after `clk_init()`
+*/
 void sleep_micros(unsigned int micros);
+/**
+** Name: sleep_micros_setup
+**
+** Set up global state for `micros` sleep. Must call `sleep_micros_finish` to
+** actually wait.
+*/
+void sleep_micros_setup(unsigned int micros);
+/**
+** Name: sleep_micros_finish
+**
+** Wait for the timer set up by `sleep_micros_setup` to expire.
+** Helpful to do useful work during the "sleep"
+*/
+void sleep_micros_finish(void);
 
 #endif  /* !ASM_SRC */
 

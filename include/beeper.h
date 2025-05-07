@@ -15,6 +15,11 @@
 
 #ifdef KERNEL_SRC
 
+/**
+** Name: beeper_write
+**
+** Play PCM audio sample in `buf` over the PC speaker
+*/
 int beeper_write(uint8_t *buf, uint_t length);
 
 #endif  /* KERNEL_SRC */
