@@ -28,7 +28,8 @@ update_paddle_pos() {
             ball_vel.y = 0.4;
             return;
 	}
-
+        
+	// Update paddle velocities
         left_vel  = -PADDLE_VEL_SCALE*(pongController.inputStates.lUp 
 	                             - pongController.inputStates.lDown);
 	right_vel = -PADDLE_VEL_SCALE*(pongController.inputStates.rUp

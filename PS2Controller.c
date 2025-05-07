@@ -1,3 +1,14 @@
+/**
+ * @file PS2Controller.c
+ * @author Shaun Thornton (sdt8987)
+ * @date 3 May 2025
+ * @brief PS2Controller implementation
+ *
+ * Implements the PS2 controller interface defined in PS2Controller.h
+ *
+ * @see https://wiki.osdev.org/I8042_PS/2_Controller
+ */
+
 #include "PS2Controller.h"
 
 #include <cio.h>
@@ -12,9 +23,12 @@
 // The command register (Write-only)
 #define COMMAND_REG (0x64)
 
+// Implementations of the PS2 controller structure function pointers.
+// These are static and are only intended to be function pointer targets.
 static int DataAvailable_Impl() { return inb(STATUS_REG) & 0x01; }
 static int ControllerBusy_Impl() { return inb(STATUS_REG) & 0x02; }
-static void WriteCommand_Impl(enum PS2Controller_Command command) { outb(COMMAND_REG, (uint8_t)command); }
+static void WriteCommand_Impl(enum PS2Controller_Command command) {
+	outb(COMMAND_REG, (uint8_t)command); }
 static void WriteData_Impl(uint8_t data) { outb(DATA_PORT, data); }
 static void ReadData_Impl(uint8_t* response) { *response = inb(DATA_PORT); }
 
@@ -23,7 +37,8 @@ static void ReadData_Impl(uint8_t* response) { *response = inb(DATA_PORT); }
 static int SelfTest(PS2Controller_t* controller, enum PS2Controller_SelfTest* result)
 {
     uint8_t tmpResult, ret;
-    ret = PS2Controller_ProcessCommand(controller, PS2_CMD_TEST_CONTROLLER, 0, &tmpResult);
+    ret = PS2Controller_ProcessCommand(controller, 
+    	PS2_CMD_TEST_CONTROLLER, 0, &tmpResult);
     *result = tmpResult;
     return ret;
 }
@@ -37,6 +52,15 @@ static int PortTest(PS2Controller_t* controller, enum PS2Controller_PortTest* re
     return ret;
 }
 
+/**
+ * @brief PS2 controller initialization implementation
+ *
+ * Configures the provided controller structure and performs both a controller
+ * self-test and a port 1 test. The results are printed to the serial console.
+ *
+ * @param controller The controller to initialize
+ * @return 0 if successful, nonzero otherwise
+ */
 int PS2Controller_Init(PS2Controller_t* controller)
 {
     int ret;
@@ -49,13 +73,15 @@ int PS2Controller_Init(PS2Controller_t* controller)
     controller->ControllerBusy = &ControllerBusy_Impl;
 
     // Disable port 1
-    if ((ret = PS2Controller_ProcessCommand(controller, PS2_CMD_DISABLE_PORT1, 0, NULL)))
+    if ((ret = PS2Controller_ProcessCommand(controller,
+    	PS2_CMD_DISABLE_PORT1, 0, NULL)))
     {
         return ret;
     }
 
     // Disable port 2
-    if ((ret = PS2Controller_ProcessCommand(controller, PS2_CMD_DISABLE_PORT2, 0, NULL)))
+    if ((ret = PS2Controller_ProcessCommand(controller,
+    	PS2_CMD_DISABLE_PORT2, 0, NULL)))
     {
         return ret;
     }
@@ -125,7 +151,8 @@ int PS2Controller_Init(PS2Controller_t* controller)
     cio_printf("PASSED!\n");
 
     // Enable port 1
-    if ((ret = PS2Controller_ProcessCommand(controller, PS2_CMD_ENABLE_PORT1, 0, NULL)))
+    if ((ret = PS2Controller_ProcessCommand(controller,
+    	PS2_CMD_ENABLE_PORT1, 0, NULL)))
     {
         return ret;
     }

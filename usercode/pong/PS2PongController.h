@@ -1,7 +1,9 @@
 
+
 #include <common.h>
 #include <PS2Controller.h>
 
+// 
 #define PS2Control(data, fieldptr, press, release) \
     if(data == press) { *fieldptr = 1; return 1; } \
     else if(data == release) { *fieldptr = 0; return 1; }
@@ -33,9 +35,8 @@ static int PS2PongController_Init(PS2PongController_t *pongController) {
     return PS2Controller_Init(&pongController->controller);
 }
 
-
+// Updates the pong controller input states if new keyboard data is available
 static int PS2PongController_Update(PS2PongController_t *pongController) {
-
     // Check if keyboard data is available
     if(pongController->controller.DataAvailable()) {
         // Read data from controller
