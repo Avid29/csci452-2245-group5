@@ -32,8 +32,17 @@ static void WriteCommand_Impl(enum PS2Controller_Command command) {
 static void WriteData_Impl(uint8_t data) { outb(DATA_PORT, data); }
 static void ReadData_Impl(uint8_t* response) { *response = inb(DATA_PORT); }
 
-
-// Perform a controller self test
+/**
+ * @brief PS2 controller self test implementation
+ *
+ * Tells the PS2 controller to perform a self test and awaits the test results.
+ * The specifics of this test are chipset dependent, but the result will always
+ * be one of the two values specified within the PS2Controller_SelfTest enum.
+ *
+ * @param controller The controller to initialize
+ * @param result A pointer to store the test results at
+ * @return 0 if successful, nonzero otherwise
+ */
 static int SelfTest(PS2Controller_t* controller, enum PS2Controller_SelfTest* result)
 {
     uint8_t tmpResult, ret;
@@ -43,7 +52,20 @@ static int SelfTest(PS2Controller_t* controller, enum PS2Controller_SelfTest* re
     return ret;
 }
 
-// Test port 1
+/**
+ * @brief PS2 controller Port 1 test implementation
+ *
+ * Tells the PS2 controller to test Port 1 (keyboard port) for any issues.
+ * This test will examine the CLOCK and DATA lines of the Port 1 bus to
+ * check for any electrical issues that would indicate a rogue device.
+ * For example:
+ * - The DATA line is being forced HIGH/LOW by the device
+ * - The CLOCK line is being forced HIGH/LOW by the device
+ *
+ * @param controller The controller to initialize
+ * @param result A pointer to store the test results at
+ * @return 0 if successful, nonzero otherwise
+ */
 static int PortTest(PS2Controller_t* controller, enum PS2Controller_PortTest* result)
 {
     uint8_t tmpResult, ret;
@@ -65,7 +87,7 @@ int PS2Controller_Init(PS2Controller_t* controller)
 {
     int ret;
 
-    // Initialize the opaque structure
+    // Initialize the controller structure
     controller->WriteCommand = &WriteCommand_Impl;
     controller->WriteData = &WriteData_Impl;
     controller->ReadData = &ReadData_Impl;
@@ -127,6 +149,7 @@ int PS2Controller_Init(PS2Controller_t* controller)
     // Check the port test result
     if (portTest != PS2_PortTest_Passed)
     {
+    	// Something is wrong with Port 1
         cio_printf("FAILED!\n\tReason: ");
         switch (portTest)
         {
@@ -158,8 +181,6 @@ int PS2Controller_Init(PS2Controller_t* controller)
         return ret;
     }
 
-    return 0;
+    return 0;	// Success
 }
-
-
 

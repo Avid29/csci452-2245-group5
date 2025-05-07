@@ -1,9 +1,16 @@
-
+/**
+ * @file PS2PongController.h
+ * @author Shaun Thornton (sdt8987)
+ * @date 4 May 2025
+ * @brief Functions for reading pong inputs from a PS2 keyboard
+ */
 
 #include <common.h>
 #include <PS2Controller.h>
 
-// 
+// Macro for binding the scancodes for a key press/release to
+// a desired action. The fieldptr variable will be updated to (1)
+// if the key is pressed and (0) on release.
 #define PS2Control(data, fieldptr, press, release) \
     if(data == press) { *fieldptr = 1; return 1; } \
     else if(data == release) { *fieldptr = 0; return 1; }

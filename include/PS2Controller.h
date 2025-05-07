@@ -303,7 +303,17 @@ static inline int PS2Controller_ProcessCommand(
     return 0;   // Success
 }
 
-// Read the configuration register
+// ================================
+// Static functions for convenience
+// ================================
+
+/**
+ * @brief Reads the PS2 controller configuration register
+ *
+ * @param controller The PS2 controller to use
+ * @param config A pointer to store the response at
+ * @returns 0 on success, nonzero otherwise
+ */
 static inline int PS2Controller_ReadConfig(
 	PS2Controller_t* controller,
 	union PS2Controller_Config* config)
@@ -311,7 +321,13 @@ static inline int PS2Controller_ReadConfig(
     return PS2Controller_ProcessCommand(controller, PS2_CMD_READ_CONFIG, 0, &config->byte);
 }
 
-// Write to the configuration register
+/**
+ * @brief Writes to the PS2 controller configuration register
+ *
+ * @param controller The PS2 controller to use
+ * @param config The configuration byte to write
+ * @returns 0 on success, nonzero otherwise
+ */
 static inline int PS2Controller_WriteConfig(
 	PS2Controller_t* controller,
 	const union PS2Controller_Config config)
@@ -319,21 +335,21 @@ static inline int PS2Controller_WriteConfig(
     return PS2Controller_ProcessCommand(controller, PS2_CMD_WRITE_CONFIG, config.byte, NULL);
 }
 
-// Read the controller output port - note that this does NOT hold data but rather the current status of the output port
+/**
+ * @brief Reads the PS2 controller output port
+ *
+ * Note that the output port does NOT hold data but rather a series of status
+ * bits indicating the state of the controller output port
+ *
+ * @param controller The PS2 controller to use
+ * @param config A pointer to store the output status at
+ * @returns 0 on success, nonzero otherwise
+ */
 static inline int PS2Controller_ReadOutputPort(
 	PS2Controller_t* controller,
 	union PS2Controller_Output* output)
 {
     return PS2Controller_ProcessCommand(controller, PS2_CMD_READ_OUTPUT_PORT, 0, &output->byte);
-}
-
-// Write the controller output port - 
-// note that this does NOT hold data but rather the current status of the output port
-static inline int PS2Controller_WriteOutputPort(
-	PS2Controller_t* controller,
-	const union PS2Controller_Output output)
-{
-    return PS2Controller_ProcessCommand(controller, PS2_CMD_WRITE_OUTPUT_PORT, output.byte, NULL);
 }
 
 // Clean up the global namespace
