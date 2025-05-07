@@ -4,51 +4,52 @@
 #include <common.h>
 #include <cio.h>
 
-#include "PS2Controller.h"
+#include "pong/PS2PongController.h"
 
 #include "pong/physics.c"
 #include "pong/render.c"
 
-PS2Controller_t pongController;
+// The PS2 keyboard pong controller
+PS2PongController_t pongController;
 
+// Speed of the paddles
 float left_vel;
 float right_vel;
 
 void
 update_paddle_pos() {
-
-    if(pongController.DataAvailable()) {
-        uint8_t data;
-        pongController.ReadData(&data);
-
-        switch(data) {
-        case 0x50:
-	    right_vel = 0.25;
-	    break;
-        case 0xD0:
-	    right_vel = 0;
-            break;
-	case 0x48:
-	    // Up key pressed
-	    right_vel = -0.25;
-	    break;
-	case 0xC8:
-	    right_vel = 0;
-	    break;
+    // Update the paddles according to keyboard input
+    if(PS2PongController_Update(&pongController)) {
+        if(pongController.inputStates.reset) {
+	    // Reset ball
+            ball_pos.x = 100;
+            ball_pos.y = 50;
+            ball_vel.x = -0.3;
+            ball_vel.y = 0.4;
+            return;
 	}
+
+        left_vel  = -PADDLE_VEL_SCALE*(pongController.inputStates.lUp 
+	                             - pongController.inputStates.lDown);
+	right_vel = -PADDLE_VEL_SCALE*(pongController.inputStates.rUp
+	                             - pongController.inputStates.rDown);
     }
 
+    // Pretend to move...
     float tmp1 = left_paddle_pos + left_vel;
     float tmp2 = right_paddle_pos + right_vel;
 
+    // If the left paddle would move out of range, clamp it
     if (!in_range(tmp1, 0, PHYSICS_BOUNDS_Y-PADDLE_LENGTH)){
 	tmp1 = left_paddle_pos;
     }
 
+    // If the right paddle would move out of range, clamp it
     if (!in_range(tmp2, 0, PHYSICS_BOUNDS_Y-PADDLE_LENGTH)){
         tmp2 = right_paddle_pos;
     }
 
+    // Actually update the paddle positions
     left_paddle_pos = tmp1;
     right_paddle_pos = tmp2;
 }
@@ -56,7 +57,7 @@ update_paddle_pos() {
 USERMAIN(pong)
 {
     initialize_rendering();
-    PS2Controller_Init(&pongController);
+    PS2PongController_Init(&pongController);
 
     // Initialize paddle pos
     left_paddle_pos = 25;

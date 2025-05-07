@@ -25,6 +25,7 @@
 #define PADDLE_LENGTH           40
 #define PADDLE_WIDTH            6
 
+#define PADDLE_VEL_SCALE        0.25
 
 // DERIVED PHYSICS STUFF
 
