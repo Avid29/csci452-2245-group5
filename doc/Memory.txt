@@ -80,7 +80,9 @@ bootstrap.h or x86/bios.h, its name is also given.
 	<     . . .           >
 	|                     |
 	-----------------------
-	| Video memory        | 0xb8000  VID_BASE_ADDR
+	| VGA Memory          | 0xA0000  VGA
+	|    -   -   -   -    | (There's some overlap here)
+	| Text Mode Memory    | 0xb8000  VID_BASE_ADDR
 	|                     |
 	<     . . .           >
 	|                     |

@@ -1,3 +1,5 @@
+// Adam Dernis
+
 #include "render.h"
 #include "physics.h"
 

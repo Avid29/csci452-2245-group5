@@ -1,3 +1,5 @@
+// Adam Dernis
+
 #include "physics.h"
 
 const vec2d_t unit_x = { .x = 1, .y = 0};

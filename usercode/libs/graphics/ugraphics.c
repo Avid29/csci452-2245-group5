@@ -41,8 +41,10 @@ void
 draw_rect(void *buf, rect_t r, char c) {
 
     // Clamp the rectangle to fit the pixel space
-    clamp(&r);
+    // Never ended up implementing clamping
+    // clamp(&r);
 
+    // Draw the rectangle by line
     for (int i = r.pos.y; i <= r.pos.y + r.size.y; i++) {
         umemset(buf + i * PIXEL_WIDTH + r.pos.x, r.size.x, c);
     }
@@ -50,7 +52,8 @@ draw_rect(void *buf, rect_t r, char c) {
 
 void
 draw_outline(void *buf, rect_t r, char c, int thickness) {
-    clamp(&r);
+    // Never ended up implementing clamping
+    // clamp(&r);
 
     // Hortizontal lines
     umemset(buf + r.pos.y * PIXEL_WIDTH + r.pos.x, r.size.x, c);
@@ -65,6 +68,7 @@ draw_outline(void *buf, rect_t r, char c, int thickness) {
     if (thickness == 1)
         return;
 
+    // Recurse for thickness
     rect_t child = r;
     child.pos.x++;
     child.pos.y++;

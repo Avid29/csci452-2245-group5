@@ -15,6 +15,7 @@
 #define PIXEL_HEIGHT    200
 #define PIXEL_COUNT     (PIXEL_WIDTH * PIXEL_HEIGHT)
 
+// VGA Basic Palette colors
 #define VGA_PALETTE_BLACK       0x00
 #define VGA_PALLETE_DARKBLUE    0x01
 #define VGA_PALLETE_DARKGREEN   0x02
@@ -32,6 +33,7 @@
 #define VGA_PALLETE_YELLOW      0x0E
 #define VGA_PALETTE_WHITE       0x0F    
 
+// VGA Palette pure RGB 
 #define VGA_PALLETE_PURE_BLUE   0x20
 #define VGA_PALLETE_PURE_RED    0x28
 #define VGA_PALLETE_PURE_GREEN  0x2F
